@@ -1,2 +1,2 @@
 rootProject.name='Awesome'
-include ':app'
+include ':app', ':lib_arch', ':lib_common', ':lib_utils', ':lib_adapter', ':lib_view', ':lib_http'
