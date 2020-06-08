@@ -2,7 +2,7 @@ package com.yyxnb.awesome
 
 import com.yyxnb.arch.ContainerActivity
 import com.yyxnb.arch.base.BaseFragment
-import com.yyxnb.awesome.fragments.HomeFragment
+import com.yyxnb.awesome.fragments.MainFragment
 
 class MainActivity : ContainerActivity() {
     //    @Override
@@ -11,6 +11,6 @@ class MainActivity : ContainerActivity() {
     //        setContentView(R.layout.activity_main);
     //    }
     override fun initBaseFragment(): BaseFragment {
-        return HomeFragment()
+        return MainFragment()
     }
 }

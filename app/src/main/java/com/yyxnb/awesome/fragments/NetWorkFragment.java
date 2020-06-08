@@ -13,7 +13,7 @@ import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener;
 import com.yyxnb.adapter.BaseViewHolder;
 import com.yyxnb.adapter.MultiItemTypeAdapter;
-import com.yyxnb.arch.annotations.BindFragment;
+import com.yyxnb.arch.annotations.BindRes;
 import com.yyxnb.arch.annotations.BindViewModel;
 import com.yyxnb.arch.base.BaseFragment;
 import com.yyxnb.awesome.R;
@@ -25,7 +25,7 @@ import com.yyxnb.common.AppConfig;
 /**
  * 网络列表.
  */
-@BindFragment(layoutRes = R.layout.fragment_net_work)
+@BindRes(layoutRes = R.layout.fragment_net_work, subPage = true)
 public class NetWorkFragment extends BaseFragment/*VM<NetWorkViewModel>*/ {
 
     @BindViewModel

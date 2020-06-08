@@ -2,25 +2,24 @@ package com.yyxnb.arch.delegate
 
 import android.annotation.SuppressLint
 import android.arch.lifecycle.ViewModel
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
+import android.support.v4.app.FragmentActivity
 import android.view.*
 import com.yyxnb.arch.ContainerActivity
 import com.yyxnb.arch.annotations.BarStyle
-import com.yyxnb.arch.annotations.BindFragment
+import com.yyxnb.arch.annotations.BindRes
 import com.yyxnb.arch.annotations.BindViewModel
 import com.yyxnb.arch.annotations.SwipeStyle
-import com.yyxnb.arch.base.BaseFragment
 import com.yyxnb.arch.base.IActivity
 import com.yyxnb.arch.base.IFragment
 import com.yyxnb.arch.common.ArchConfig
 import com.yyxnb.arch.livedata.ViewModelFactory
-import com.yyxnb.arch.utils.FragmentManagerUtils
 import com.yyxnb.common.MainThreadUtils
 import com.yyxnb.common.StatusBarUtils
 import kotlinx.coroutines.CoroutineScope
@@ -34,13 +33,12 @@ class FragmentDelegate(private var iFragment: IFragment?) : CoroutineScope by Ma
     private var iActivity: IActivity? = null
     private var mRootView: View? = null
     private var mFragment: Fragment?
-    private var mActivity: AppCompatActivity? = null
+    private var mActivity: FragmentActivity? = null
     private val mLazyDelegate: FragmentLazyDelegate
 
     private var layoutRes = 0
     private var statusBarTranslucent = ArchConfig.statusBarTranslucent
     private var fitsSystemWindows = ArchConfig.fitsSystemWindows
-    private val statusBarHidden = ArchConfig.statusBarHidden
     private var statusBarColor = ArchConfig.statusBarColor
     private var statusBarDarkTheme = ArchConfig.statusBarStyle
     private var swipeBack = SwipeStyle.Edge
@@ -53,16 +51,14 @@ class FragmentDelegate(private var iFragment: IFragment?) : CoroutineScope by Ma
         mLazyDelegate = FragmentLazyDelegate(mFragment)
     }
 
-    fun onAttach(activity: AppCompatActivity?) {
-        mActivity = activity
-        if (activity is IActivity) {
-            iActivity = activity
-        }
+    fun onAttach(context: Context?) {
+        mActivity = context as FragmentActivity
+        require(mActivity is IActivity) { "Activity请实现IActivity接口" }
+        iActivity = mActivity as IActivity
     }
 
     fun onCreate(savedInstanceState: Bundle?) {
         mLazyDelegate.onCreate(savedInstanceState)
-//        FragmentManagerUtils.pushFragment(mFragment)
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -120,7 +116,6 @@ class FragmentDelegate(private var iFragment: IFragment?) : CoroutineScope by Ma
         if (isActive) {
             cancel()
         }
-//        FragmentManagerUtils.killFragment(mFragment)
     }
 
     /**
@@ -129,13 +124,12 @@ class FragmentDelegate(private var iFragment: IFragment?) : CoroutineScope by Ma
     fun initAttributes() {
         MainThreadUtils.post(Runnable {
 
-            iFragment!!.javaClass.getAnnotation(BindFragment::class.java)?.let {
+            iFragment!!.javaClass.getAnnotation(BindRes::class.java)?.let {
                 layoutRes = it.layoutRes
                 fitsSystemWindows = it.fitsSystemWindows
                 statusBarTranslucent = it.statusBarTranslucent
                 swipeBack = it.swipeBack
                 subPage = it.subPage
-                group = it.group
                 if (it.statusBarStyle != BarStyle.None) {
                     statusBarDarkTheme = it.statusBarStyle
                 }
@@ -193,16 +187,12 @@ class FragmentDelegate(private var iFragment: IFragment?) : CoroutineScope by Ma
         // 侧滑返回
         iActivity!!.setSwipeBack(swipeBack)
 
-        // 隐藏
-        val hidden = statusBarHidden
-        StatusBarUtils.setStatusBarHidden(window, hidden)
-
         // 文字颜色
         val statusBarStyle = statusBarDarkTheme
         StatusBarUtils.setStatusBarStyle(window, statusBarStyle == BarStyle.DarkContent)
 
         // 隐藏 or 不留空间 则透明
-        if (hidden || !fitsSystemWindows) {
+        if (!fitsSystemWindows) {
             StatusBarUtils.setStatusBarColor(window, Color.TRANSPARENT)
         } else {
             var statusBarColor = statusBarColor
@@ -241,7 +231,11 @@ class FragmentDelegate(private var iFragment: IFragment?) : CoroutineScope by Ma
         return args
     }
 
-    fun <T : BaseFragment> startFragment(targetFragment: T, requestCode: Int) {
+    fun finish() {
+        mActivity?.onBackPressed()
+    }
+
+    fun <T : IFragment> startFragment(targetFragment: T, requestCode: Int) {
         val bundle = initArguments()
         val intent = Intent(mActivity, ContainerActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
@@ -250,5 +244,22 @@ class FragmentDelegate(private var iFragment: IFragment?) : CoroutineScope by Ma
         intent.putExtra(ArchConfig.BUNDLE, bundle)
         mActivity!!.startActivityForResult(intent, requestCode)
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is FragmentDelegate) return false
+
+        if (iFragment != other.iFragment) return false
+        if (subPage != other.subPage) return false
+        if (group != other.group) return false
+        if (needLogin != other.needLogin) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return iFragment?.hashCode() ?: 0
+    }
+
 
 }

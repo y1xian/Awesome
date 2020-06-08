@@ -43,10 +43,10 @@ public final class NavigationBarObserver extends ContentObserver {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && context != null
                 && context.getContentResolver() != null && !mIsRegister) {
             Uri uri = null;
-            if (OSUtils.isMIUI()) {
+            if (OSUtils.INSTANCE.isMIUI()) {
                 uri = Settings.Global.getUriFor(IMMERSION_MIUI_NAVIGATION_BAR_HIDE_SHOW);
-            } else if (OSUtils.isEMUI()) {
-                if (OSUtils.isEMUI3_x() || Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            } else if (OSUtils.INSTANCE.isEMUI()) {
+                if (OSUtils.INSTANCE.isEMUI3_x() || Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                     uri = Settings.System.getUriFor(IMMERSION_EMUI_NAVIGATION_BAR_HIDE_SHOW);
                 } else {
                     uri = Settings.Global.getUriFor(IMMERSION_EMUI_NAVIGATION_BAR_HIDE_SHOW);
@@ -65,10 +65,10 @@ public final class NavigationBarObserver extends ContentObserver {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && context != null && context.getContentResolver() != null
                 && mListeners != null && !mListeners.isEmpty()) {
             int show = 0;
-            if (OSUtils.isMIUI()) {
+            if (OSUtils.INSTANCE.isMIUI()) {
                 show = Settings.Global.getInt(context.getContentResolver(), IMMERSION_MIUI_NAVIGATION_BAR_HIDE_SHOW, 0);
-            } else if (OSUtils.isEMUI()) {
-                if (OSUtils.isEMUI3_x() || Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            } else if (OSUtils.INSTANCE.isEMUI()) {
+                if (OSUtils.INSTANCE.isEMUI3_x() || Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                     show = Settings.System.getInt(context.getContentResolver(), IMMERSION_EMUI_NAVIGATION_BAR_HIDE_SHOW, 0);
                 } else {
                     show = Settings.Global.getInt(context.getContentResolver(), IMMERSION_EMUI_NAVIGATION_BAR_HIDE_SHOW, 0);

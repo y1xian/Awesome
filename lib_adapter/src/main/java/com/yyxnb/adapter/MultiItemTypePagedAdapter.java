@@ -6,6 +6,7 @@ import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.View;
@@ -164,6 +165,41 @@ public class MultiItemTypePagedAdapter<T> extends PagedListAdapter<T, BaseViewHo
         if (getItem(position) != null) {
             convert(holder, getItem(position));
         }
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        RecyclerView.LayoutManager manager = recyclerView.getLayoutManager();
+        if (manager instanceof GridLayoutManager) {
+            final GridLayoutManager gridManager = ((GridLayoutManager) manager);
+            final GridLayoutManager.SpanSizeLookup defSpanSizeLookup = gridManager.getSpanSizeLookup();
+            gridManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    if (mSpanSizeLookup == null) {
+                        return isFixedViewType(position) ? gridManager.getSpanCount() : defSpanSizeLookup.getSpanSize(position);
+                    } else {
+                        return (isFixedViewType(position)) ? gridManager.getSpanCount() : mSpanSizeLookup.getSpanSize(gridManager,
+                                position - getHeaderCount());
+                    }
+                }
+            });
+        }
+    }
+
+    protected boolean isFixedViewType(int position) {
+        return isHeaderPosition(position) || isFooterPosition(position);
+    }
+
+    private SpanSizeLookup mSpanSizeLookup;
+
+    public interface SpanSizeLookup {
+        int getSpanSize(GridLayoutManager gridLayoutManager, int position);
+    }
+
+    public void setSpanSizeLookup(SpanSizeLookup spanSizeLookup) {
+        this.mSpanSizeLookup = spanSizeLookup;
     }
 
     /**

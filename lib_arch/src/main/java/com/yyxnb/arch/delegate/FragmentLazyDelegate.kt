@@ -71,7 +71,7 @@ class FragmentLazyDelegate(mFragment: Fragment?) {
     fun onActivityCreated(savedInstanceState: Bundle?, subPage: Boolean) {
         mIsSubPage = subPage
         isViewCreated = true
-//        iFragment!!.initView(savedInstanceState)
+        iFragment!!.initView(savedInstanceState)
         // !isHidden() 默认为 true  在调用 hide show 的时候可以使用
         if (!mFragment!!.isHidden && mFragment!!.userVisibleHint) {
             // 这里的限制只能限制 A - > B 两层嵌套

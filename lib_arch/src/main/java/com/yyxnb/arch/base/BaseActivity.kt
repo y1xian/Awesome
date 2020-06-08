@@ -1,20 +1,13 @@
 package com.yyxnb.arch.base
 
 import android.content.Context
-import android.content.Intent
 import android.content.res.Resources
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.MotionEvent
 import com.github.anzewei.parallaxbacklayout.ParallaxBack
-import com.github.anzewei.parallaxbacklayout.ParallaxHelper
-import com.github.anzewei.parallaxbacklayout.widget.ParallaxBackLayout
 import com.yyxnb.arch.ContainerActivity
-import com.yyxnb.arch.annotations.SwipeStyle
-import com.yyxnb.arch.common.ArchConfig
-import com.yyxnb.arch.delegate.ActivityDelegate
-import com.yyxnb.arch.utils.FragmentManagerUtils
 import com.yyxnb.common.KeyboardUtils
 import me.jessyan.autosize.AutoSizeCompat
 import java.lang.ref.WeakReference
@@ -29,53 +22,24 @@ abstract class BaseActivity : AppCompatActivity(), IActivity {
     protected val TAG = javaClass.canonicalName
     protected var mContext: WeakReference<Context>? = null
     private val java8Observer: Java8Observer
-    private val mActivityDelegate by lazy { ActivityDelegate(this) }
+    private val mActivityDelegate by lazy { getBaseDelegate() }
 
-    val context: Context?
-        get() = mContext!!.get()
+    val context: Context
+        get() = mContext?.get()!!
 
     init {
         java8Observer = Java8Observer(TAG)
         lifecycle.addObserver(java8Observer)
     }
 
-    override fun getBaseDelegate(): ActivityDelegate? {
-        return mActivityDelegate
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         window.setBackgroundDrawable(null)
         mContext = WeakReference(this)
-        // 在界面未初始化之前调用的初始化窗口
-//        initWindows()
         super.onCreate(savedInstanceState)
-        mActivityDelegate.onCreate(savedInstanceState)
-//        setContentView(initLayoutResId())
-//        initView(savedInstanceState)
-    }
-
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        super.onWindowFocusChanged(hasFocus)
-        mActivityDelegate.onWindowFocusChanged(hasFocus)
     }
 
     override fun setSwipeBack(mSwipeBack: Int) {
-        val layout = ParallaxHelper.getParallaxBackLayout(this, true)
-        when (mSwipeBack) {
-            SwipeStyle.Full -> {
-                ParallaxHelper.enableParallaxBack(this)
-                //全屏滑动
-                layout.setEdgeMode(ParallaxBackLayout.EDGE_MODE_FULL)
-            }
-            SwipeStyle.Edge -> {
-                ParallaxHelper.enableParallaxBack(this)
-                //边缘滑动
-                layout.setEdgeMode(ParallaxBackLayout.EDGE_MODE_DEFAULT)
-            }
-            SwipeStyle.None -> ParallaxHelper.disableParallaxBack(this)
-            else -> {
-            }
-        }
+        mActivityDelegate.setSwipeBack(mSwipeBack)
     }
 
     override fun onDestroy() {
@@ -84,7 +48,6 @@ abstract class BaseActivity : AppCompatActivity(), IActivity {
         lifecycle.removeObserver(java8Observer)
         mContext!!.clear()
         mContext = null
-//        mActivityDelegate = null
     }
 
     override fun getResources(): Resources {
@@ -98,15 +61,6 @@ abstract class BaseActivity : AppCompatActivity(), IActivity {
 
     override fun onBackPressed() {
         val fragments = supportFragmentManager.fragments
-        val instance = FragmentManagerUtils
-        if (instance.count() > 1) {
-            val current = instance.currentFragment() as BaseFragment
-            val before = instance.beforeFragment()
-            //将回调的传入到fragment中去
-            if (current != null && before != null) {
-                before.onActivityResult(current.requestCode, current.resultCode, current.result)
-            }
-        }
         if (fragments.isEmpty()) {
             super.onBackPressed()
         } else {
@@ -127,25 +81,16 @@ abstract class BaseActivity : AppCompatActivity(), IActivity {
         return super.onTouchEvent(event)
     }
 
-    fun <T : BaseFragment> startFragment(targetFragment: T) {
+    fun <T : IFragment> startFragment(targetFragment: T) {
         startFragment(targetFragment, 0)
     }
 
-    fun <T : BaseFragment> startFragment(targetFragment: T, requestCode: Int) {
-        val intent = Intent(this, ContainerActivity::class.java)
-        val bundle = targetFragment.initArguments()
-        bundle.putInt(ArchConfig.REQUEST_CODE, requestCode)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        intent.putExtra(ArchConfig.FRAGMENT, targetFragment.javaClass.canonicalName)
-        intent.putExtra(ArchConfig.BUNDLE, bundle)
-        startActivityForResult(intent, requestCode)
+    fun <T : IFragment> startFragment(targetFragment: T, requestCode: Int) {
+        mActivityDelegate.startFragment(targetFragment, requestCode)
     }
 
-    fun setRootFragment(fragment: BaseFragment, containerId: Int) {
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(containerId, fragment, fragment.sceneId())
-        transaction.addToBackStack(fragment.sceneId())
-        transaction.commitAllowingStateLoss()
+    fun setRootFragment(fragment: IFragment, containerId: Int) {
+        mActivityDelegate.setRootFragment(fragment, containerId)
     }
 
 }

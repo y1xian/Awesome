@@ -1,55 +1,61 @@
 package com.yyxnb.arch.delegate
 
 import android.app.Activity
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.LifecycleObserver
-import android.arch.lifecycle.OnLifecycleEvent
-import android.databinding.DataBindingUtil.setContentView
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
+import android.view.ViewGroup
 import com.yyxnb.arch.annotations.BindViewModel
 import com.yyxnb.arch.base.IActivity
 import com.yyxnb.arch.livedata.ViewModelFactory
-import com.yyxnb.common.AppConfig.getInstance
+import com.yyxnb.arch.utils.AppManager
 import com.yyxnb.common.MainThreadUtils.post
 
-class ActivityDelegateImpl(private var activity: FragmentActivity?) : IActivityDelegate, LifecycleObserver {
+/**
+ * ActivityLifecycleCallbacks 监听 Activity 生命周期
+ * PS ：先走 ActivityLifecycleCallbacks 再走 Activity
+ */
+class ActivityDelegateImpl(
+        private var mActivity: FragmentActivity?
+) : IActivityDelegate {
 
-    private var iActivity: IActivity? = activity as IActivity
+    private var iActivity: IActivity? = mActivity as IActivity
+    private var delegate: ActivityDelegate? = null
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     override fun onCreate(savedInstanceState: Bundle?) {
         iActivity?.apply {
+            // 在界面未初始化之前调用的初始化窗口
             initWindows()
-            if (initLayoutResId() != 0) {
-                activity?.setContentView(initLayoutResId())
-            }
+            delegate = iActivity?.getBaseDelegate()
+            delegate?.onCreate(savedInstanceState)
             initDeclaredFields()
             initView(savedInstanceState)
         }
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
     override fun onStart() {
+        val view = (mActivity?.window?.decorView as ViewGroup).getChildAt(0)
+        view.viewTreeObserver.addOnWindowFocusChangeListener { hasFocus: Boolean ->
+            if (delegate != null) {
+                delegate!!.onWindowFocusChanged(hasFocus)
+            }
+        }
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     override fun onResume() {
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
     override fun onPause() {
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     override fun onStop() {
     }
 
     override fun onSaveInstanceState(activity: Activity?, outState: Bundle?) {}
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     override fun onDestroy() {
-        activity = null
+        delegate?.onDestroy()
+        AppManager.activityDelegates?.remove(iActivity.hashCode())
+        mActivity = null
         iActivity = null
     }
 
@@ -66,7 +72,7 @@ class ActivityDelegateImpl(private var activity: FragmentActivity?) : IActivityD
                 val annotation = field.getAnnotation(BindViewModel::class.java)
                 if (annotation != null) {
                     try {
-                        field[iActivity] = ViewModelFactory.createViewModel(activity!!, field)
+                        field[iActivity] = ViewModelFactory.createViewModel(mActivity!!, field)
                     } catch (e: IllegalAccessException) {
                         e.printStackTrace()
                     }

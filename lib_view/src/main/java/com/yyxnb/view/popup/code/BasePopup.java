@@ -284,7 +284,7 @@ public abstract class BasePopup extends FrameLayout implements OnNavigationBarLi
         if (KeyboardUtils.sDecorViewInvisibleHeightPre == 0) {
             dismiss();
         } else {
-            KeyboardUtils.hideSoftInput(BasePopup.this);
+            KeyboardUtils.INSTANCE.hideSoftInput(BasePopup.this);
         }
     }
 
@@ -300,7 +300,7 @@ public abstract class BasePopup extends FrameLayout implements OnNavigationBarLi
         public void run() {
             if (focusView != null && !isDone) {
                 isDone = true;
-                KeyboardUtils.showSoftInput(focusView);
+                KeyboardUtils.INSTANCE.showSoftInput(focusView);
             }
         }
     }
@@ -476,7 +476,7 @@ public abstract class BasePopup extends FrameLayout implements OnNavigationBarLi
         }
         popupStatus = PopupStatus.Dismissing;
         if (popupInfo.autoOpenSoftInput) {
-            KeyboardUtils.hideSoftInput(this);
+            KeyboardUtils.INSTANCE.hideSoftInput(this);
         }
         clearFocus();
         doDismissAnimation();
@@ -497,7 +497,7 @@ public abstract class BasePopup extends FrameLayout implements OnNavigationBarLi
 
     protected void doAfterDismiss() {
         if (popupInfo.autoOpenSoftInput) {
-            KeyboardUtils.hideSoftInput(this);
+            KeyboardUtils.INSTANCE.hideSoftInput(this);
         }
         removeCallbacks(doAfterDismissTask);
         postDelayed(doAfterDismissTask, getAnimationDuration());
@@ -534,7 +534,7 @@ public abstract class BasePopup extends FrameLayout implements OnNavigationBarLi
             // 移除弹窗，GameOver
             if (popupInfo.decorView != null) {
                 popupInfo.decorView.removeView(BasePopup.this);
-                KeyboardUtils.removeLayoutChangeListener(popupInfo.decorView, BasePopup.this);
+                KeyboardUtils.INSTANCE.removeLayoutChangeListener(popupInfo.decorView, BasePopup.this);
             }
         }
     };
@@ -580,7 +580,7 @@ public abstract class BasePopup extends FrameLayout implements OnNavigationBarLi
         stack.clear();
         removeCallbacks(doAfterShowTask);
         removeCallbacks(doAfterDismissTask);
-        KeyboardUtils.removeLayoutChangeListener(popupInfo.decorView, BasePopup.this);
+        KeyboardUtils.INSTANCE.removeLayoutChangeListener(popupInfo.decorView, BasePopup.this);
         if (showSoftInputTask != null) {
             removeCallbacks(showSoftInputTask);
         }

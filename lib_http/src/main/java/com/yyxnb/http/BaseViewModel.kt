@@ -11,7 +11,7 @@ import com.yyxnb.common.AppConfig
 import com.yyxnb.common.NetworkUtils
 import com.yyxnb.http.config.HttpConfig
 import com.yyxnb.http.exception.ResponseThrowable
-import com.yyxnb.http.interfaces.IData
+import com.yyxnb.common.interfaces.IData
 import com.yyxnb.http.interfaces.RequestDisplay
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow

@@ -112,7 +112,7 @@ public abstract class BottomPopup extends BasePopup {
             }
             popupStatus = PopupStatus.Dismissing;
             if (popupInfo.autoOpenSoftInput) {
-                KeyboardUtils.hideSoftInput(this);
+                KeyboardUtils.INSTANCE.hideSoftInput(this);
             }
             clearFocus();
             // 关闭Drawer，由于Drawer注册了关闭监听，会自动调用dismiss

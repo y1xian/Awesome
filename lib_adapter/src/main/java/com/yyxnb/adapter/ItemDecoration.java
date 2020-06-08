@@ -591,22 +591,22 @@ public class ItemDecoration extends RecyclerView.ItemDecoration {
     }
 
     public ItemDecoration setPaddingTop(int paddingTop) {
-        this.paddingTop = DpUtils.dp2px(mContext, paddingTop);
+        this.paddingTop = DpUtils.INSTANCE.dp2px(mContext, paddingTop);
         return this;
     }
 
     public ItemDecoration setPaddingBottom(int paddingBottom) {
-        this.paddingBottom = DpUtils.dp2px(mContext, paddingBottom);
+        this.paddingBottom = DpUtils.INSTANCE.dp2px(mContext, paddingBottom);
         return this;
     }
 
     public ItemDecoration setPaddingLeft(int paddingLeft) {
-        this.paddingLeft = DpUtils.dp2px(mContext, paddingLeft);
+        this.paddingLeft = DpUtils.INSTANCE.dp2px(mContext, paddingLeft);
         return this;
     }
 
     public ItemDecoration setPaddingRight(int paddingRight) {
-        this.paddingRight = DpUtils.dp2px(mContext, paddingRight);
+        this.paddingRight = DpUtils.INSTANCE.dp2px(mContext, paddingRight);
         return this;
     }
 
@@ -622,7 +622,7 @@ public class ItemDecoration extends RecyclerView.ItemDecoration {
      * 分割线高度
      */
     public ItemDecoration setDividerHeight(int dividerHeight) {
-        this.dividerHeight = DpUtils.dp2px(mContext, dividerHeight);
+        this.dividerHeight = DpUtils.INSTANCE.dp2px(mContext, dividerHeight);
         return this;
     }
 
@@ -630,7 +630,7 @@ public class ItemDecoration extends RecyclerView.ItemDecoration {
      * 分割线宽度 网格
      */
     public ItemDecoration setDividerWidth(int dividerWidth) {
-        this.dividerWidth = DpUtils.dp2px(mContext, dividerWidth);
+        this.dividerWidth = DpUtils.INSTANCE.dp2px(mContext, dividerWidth);
         return this;
     }
 

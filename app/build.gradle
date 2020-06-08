@@ -45,4 +45,8 @@ dependencies {
     releaseImplementation libs.leak_canary_release
     // Optional, if you use support library fragments:
     debugImplementation libs.leak_canary_debug_support
+
+    //https://github.com/hackware1993/MagicIndicator
+    implementation 'com.github.hackware1993:MagicIndicator:1.6.0'
+
 }

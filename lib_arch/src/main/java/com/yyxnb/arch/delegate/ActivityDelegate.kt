@@ -1,11 +1,27 @@
 package com.yyxnb.arch.delegate
 
+import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.MotionEvent
 import android.view.View
+import android.view.Window
 import android.widget.EditText
+import com.github.anzewei.parallaxbacklayout.ParallaxHelper
+import com.github.anzewei.parallaxbacklayout.widget.ParallaxBackLayout
+import com.yyxnb.arch.ContainerActivity
+import com.yyxnb.arch.annotations.BarStyle
+import com.yyxnb.arch.annotations.BindRes
+import com.yyxnb.arch.annotations.SwipeStyle
 import com.yyxnb.arch.base.IActivity
+import com.yyxnb.arch.base.IFragment
+import com.yyxnb.arch.common.ArchConfig
+import com.yyxnb.arch.common.Bus
+import com.yyxnb.arch.common.MsgEvent
+import com.yyxnb.common.MainThreadUtils.post
+import com.yyxnb.common.StatusBarUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
@@ -15,24 +31,59 @@ class ActivityDelegate(private var iActivity: IActivity?) : CoroutineScope by Ma
 
     private var mActivity: AppCompatActivity? = iActivity as AppCompatActivity
 
+    private var layoutRes = 0
+    private var statusBarTranslucent = ArchConfig.statusBarTranslucent
+    private var fitsSystemWindows = ArchConfig.fitsSystemWindows
+    private var statusBarColor = ArchConfig.statusBarColor
+    private var statusBarDarkTheme = ArchConfig.statusBarStyle
+    private var needLogin = false
+    private var isExtends = false
+    private var isContainer = false
+
     /**
      * 是否第一次加载
      */
     private var mIsFirstVisible = true
+
     fun onCreate(savedInstanceState: Bundle?) {
-//        ActivityManagerUtils.pushActivity(mActivity)
+        initAttributes()
+        if (!isExtends) {
+            iActivity?.apply {
+                if (layoutRes != 0 || initLayoutResId() != 0) {
+                    mActivity!!.setContentView(if (layoutRes == 0) initLayoutResId() else layoutRes)
+                }
+            }
+        }
+        initView()
+    }
+
+    private fun initView() {
+        if (!isContainer) {
+            // 不留空间 则透明
+            if (!fitsSystemWindows) {
+                StatusBarUtils.setStatusBarColor(getWindow(), Color.TRANSPARENT)
+            } else {
+                StatusBarUtils.setStatusBarColor(getWindow(), statusBarColor)
+            }
+            StatusBarUtils.setStatusBarStyle(getWindow(), statusBarDarkTheme == BarStyle.DarkContent)
+            StatusBarUtils.setStatusBarTranslucent(getWindow(), statusBarTranslucent, fitsSystemWindows)
+        }
+    }
+
+    private fun getWindow(): Window {
+        return mActivity!!.window
     }
 
     fun onWindowFocusChanged(hasFocus: Boolean) {
         if (mIsFirstVisible && hasFocus) {
             mIsFirstVisible = false
             iActivity!!.initViewData()
+            iActivity!!.initObservable()
         }
     }
 
     fun onDestroy() {
         mIsFirstVisible = true
-//        ActivityManagerUtils.killActivity(mActivity)
         iActivity = null
         mActivity = null
         // 取消协程
@@ -62,6 +113,86 @@ class ActivityDelegate(private var iActivity: IActivity?) : CoroutineScope by Ma
         }
         // 如果焦点不是EditText则忽略
         return false
+    }
+
+    /**
+     * 加载注解设置
+     */
+    fun initAttributes() {
+        post(Runnable {
+            val bindRes = iActivity!!.javaClass.getAnnotation(BindRes::class.java)
+            if (bindRes != null) {
+                layoutRes = bindRes.layoutRes
+                fitsSystemWindows = bindRes.fitsSystemWindows
+                statusBarTranslucent = bindRes.statusBarTranslucent
+                if (bindRes.statusBarStyle != BarStyle.None) {
+                    statusBarDarkTheme = bindRes.statusBarStyle
+                }
+                if (bindRes.statusBarColor != 0) {
+                    statusBarColor = bindRes.statusBarColor
+                }
+                needLogin = bindRes.needLogin
+                isExtends = bindRes.isExtends
+                isContainer = bindRes.isContainer
+                // 如果需要登录，并且处于未登录状态下，发送通知
+                if (needLogin && !ArchConfig.needLogin) {
+                    Bus.post(MsgEvent(ArchConfig.NEED_LOGIN_CODE))
+                }
+            }
+        })
+    }
+
+    fun setSwipeBack(mSwipeBack: Int) {
+        val layout = ParallaxHelper.getParallaxBackLayout(mActivity, true)
+        when (mSwipeBack) {
+            SwipeStyle.Full -> {
+                ParallaxHelper.enableParallaxBack(mActivity)
+                //全屏滑动
+                layout.setEdgeMode(ParallaxBackLayout.EDGE_MODE_FULL)
+            }
+            SwipeStyle.Edge -> {
+                ParallaxHelper.enableParallaxBack(mActivity)
+                //边缘滑动
+                layout.setEdgeMode(ParallaxBackLayout.EDGE_MODE_DEFAULT)
+            }
+            SwipeStyle.None -> ParallaxHelper.disableParallaxBack(mActivity)
+            else -> {
+            }
+        }
+    }
+
+    fun <T : IFragment> startFragment(targetFragment: T) {
+        startFragment(targetFragment, 0)
+    }
+
+    fun <T : IFragment> startFragment(targetFragment: T, requestCode: Int) {
+        val intent = Intent(mActivity, ContainerActivity::class.java)
+        val bundle: Bundle? = targetFragment.initArguments()
+        bundle?.putInt(ArchConfig.REQUEST_CODE, requestCode)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        intent.putExtra(ArchConfig.FRAGMENT, targetFragment.javaClass.canonicalName)
+        intent.putExtra(ArchConfig.BUNDLE, bundle)
+        mActivity!!.startActivityForResult(intent, requestCode)
+    }
+
+    fun <T : IFragment> setRootFragment(fragment: T, containerId: Int) {
+        val transaction = mActivity!!.supportFragmentManager.beginTransaction()
+        transaction.replace(containerId, (fragment as Fragment), fragment.sceneId())
+        transaction.addToBackStack(fragment.sceneId())
+        transaction.commitAllowingStateLoss()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ActivityDelegate) return false
+
+        if (iActivity != other.iActivity) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return iActivity?.hashCode() ?: 0
     }
 
 }

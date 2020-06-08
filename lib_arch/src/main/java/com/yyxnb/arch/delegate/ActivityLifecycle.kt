@@ -6,16 +6,14 @@ import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.util.LruCache
 import com.yyxnb.arch.base.IActivity
-import com.yyxnb.arch.utils.ActivityManagerUtils.killActivity
-import com.yyxnb.arch.utils.ActivityManagerUtils.pushActivity
+import com.yyxnb.arch.utils.AppManager
 
 object ActivityLifecycle : ActivityLifecycleCallbacks {
 
     private val cache = LruCache<String, IActivityDelegate>(100)
 
     override fun onActivityCreated(activity: Activity?, savedInstanceState: Bundle?) {
-        pushActivity(activity)
-        activity?.let { pushActivity(it) }
+        activity?.let { AppManager.addActivity(it) }
 
         if (activity !is IActivity) {
             return
@@ -52,7 +50,7 @@ object ActivityLifecycle : ActivityLifecycleCallbacks {
     }
 
     override fun onActivityDestroyed(activity: Activity?) {
-        activity?.let { killActivity(it) }
+        activity?.let { AppManager.removeActivity(it) }
         fetchActivityDelegate(activity)?.onDestroy()
     }
 

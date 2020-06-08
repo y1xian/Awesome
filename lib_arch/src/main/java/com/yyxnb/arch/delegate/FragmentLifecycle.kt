@@ -7,15 +7,14 @@ import android.support.v4.app.FragmentManager
 import android.util.LruCache
 import android.view.View
 import com.yyxnb.arch.base.IFragment
-import com.yyxnb.arch.utils.FragmentManagerUtils.killFragment
-import com.yyxnb.arch.utils.FragmentManagerUtils.pushFragment
+import com.yyxnb.arch.utils.AppManager
 
 object FragmentLifecycle : FragmentManager.FragmentLifecycleCallbacks() {
 
     private val cache = LruCache<String, IFragmentDelegate>(100)
 
     override fun onFragmentAttached(fm: FragmentManager, f: Fragment, context: Context) {
-        pushFragment(f)
+        AppManager.addFragment(f)
         if (f !is IFragment) {
             return
         }
@@ -62,7 +61,7 @@ object FragmentLifecycle : FragmentManager.FragmentLifecycleCallbacks() {
     }
 
     override fun onFragmentDestroyed(fm: FragmentManager, f: Fragment) {
-        killFragment(f)
+        AppManager.removeFragment(f)
         fetchFragmentDelegateFromCache(f)?.onDestroyed()
     }
 

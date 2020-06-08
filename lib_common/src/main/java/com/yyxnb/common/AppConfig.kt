@@ -17,11 +17,11 @@ object AppConfig : Serializable {
         if (app == null) {
             synchronized(AppConfig::class.java) {
                 if (app == null) {
-                    app = WeakReference<Application>(AppGlobals.getApplication())
+                    app = WeakReference<Application>(AppGlobals.application)
                 }
             }
         }
-        return app!!.get()!!
+        return app?.get()!!
     }
 
     /**
@@ -33,18 +33,18 @@ object AppConfig : Serializable {
         if (context == null) {
             synchronized(AppConfig::class.java) {
                 if (context == null) {
-                    context = WeakReference<Context>(getApp()!!.applicationContext)
+                    context = WeakReference<Context>(getApp().applicationContext)
                 }
             }
         }
-        return context!!.get()!!
+        return context?.get()!!
     }
 
     fun toast(s: String) {
         ToastUtils.normal(s)
     }
 
-    fun log(tag: String?, s: String) {
+    fun log(tag: String, s: String) {
         if (isDebug) {
             LogUtils.w(s, tag)
         }
@@ -61,7 +61,7 @@ object AppConfig : Serializable {
      */
     val isDebug: Boolean
         get() = try {
-            val info = getContext()!!.applicationInfo
+            val info = getContext().applicationInfo
             info.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
         } catch (e: Exception) {
             false

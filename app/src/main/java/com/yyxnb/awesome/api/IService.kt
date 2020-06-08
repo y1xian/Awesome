@@ -15,8 +15,11 @@ interface IService {
     //    @POST("video/query")
     //    LiveData<ApiResponse<BaseListData<TikTokBean>>> getVideoList(@FieldMap Map<String,String> map);
 
-    @GET("video/query")
+    @GET("v2/5ecfd21e320000f1aee3d61a")
+//    @GET("video/query")
     suspend fun getVideoList(@QueryMap map: Map<String, String>): BaseData<StateData<TikTokBean>>
 
-
+    @GET("v2/5ecfd21e320000f1aee3d61a")
+    //    @GET("video/query")
+    suspend fun getVideoList4(@QueryMap map: Map<String?, String?>?): BaseData<StateData<TikTokBean>>
 }

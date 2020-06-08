@@ -14,6 +14,7 @@ import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.constant.RefreshState;
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
+import com.yyxnb.adapter.ItemDecoration;
 import com.yyxnb.arch.base.BaseFragment;
 import com.yyxnb.awesome.R;
 import com.yyxnb.awesome.databinding.LayoutRefreshViewBinding;
@@ -29,7 +30,7 @@ public abstract class AbsListFragment<T, M extends BasePagedViewModel<T>> extend
 //    protected EmptyView mEmptyView;
     protected PagedListAdapter<T, RecyclerView.ViewHolder> adapter;
     protected M mViewModel;
-    protected DividerItemDecoration decoration;
+    protected ItemDecoration decoration;
 
     @Override
     public int initLayoutResId() {
@@ -50,47 +51,16 @@ public abstract class AbsListFragment<T, M extends BasePagedViewModel<T>> extend
         mRefreshLayout.setOnLoadMoreListener(this);
 
         adapter = getAdapter();
-        mRecyclerView.setAdapter(adapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        mRecyclerView.setItemAnimator(null);
+//        mRecyclerView.setAdapter(adapter);
+//        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+//        mRecyclerView.setItemAnimator(null);
 
         //默认给列表中的Item 一个 10dp的ItemDecoration
-        decoration = new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
-        decoration.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.list_divider));
+        decoration = new ItemDecoration(getContext());
         mRecyclerView.addItemDecoration(decoration);
 
         genericViewModel();
     }
-
-//    @Nullable
-//    @Override
-//    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-//        binding = LayoutRefreshViewBinding.inflate(inflater, container, false);
-//        binding.getRoot().setFitsSystemWindows(true);
-//        mRecyclerView = binding.recyclerView;
-//        mRefreshLayout = binding.refreshLayout;
-////        mEmptyView = binding.emptyView;
-//
-//        mRefreshLayout.setEnableRefresh(true);
-//        mRefreshLayout.setEnableLoadMore(true);
-//        mRefreshLayout.setOnRefreshListener(this);
-//        mRefreshLayout.setOnLoadMoreListener(this);
-//
-//        adapter = getAdapter();
-//        mRecyclerView.setAdapter(adapter);
-//        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-//        mRecyclerView.setItemAnimator(null);
-//
-//        //默认给列表中的Item 一个 10dp的ItemDecoration
-//        decoration = new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
-//        decoration.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.list_divider));
-//        mRecyclerView.addItemDecoration(decoration);
-//
-//        genericViewModel();
-//        return binding.getRoot();
-//
-//    }
-
 
     private void genericViewModel() {
         //利用 子类传递的 泛型参数实例化出absViewModel 对象。

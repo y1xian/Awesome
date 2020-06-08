@@ -1,6 +1,6 @@
 package com.yyxnb.awesome.bean;
 
-import com.yyxnb.http.interfaces.IData;
+import com.yyxnb.common.interfaces.IData;
 
 import java.io.Serializable;
 
@@ -27,6 +27,16 @@ public class BaseData<T> implements IData<T>, Serializable {
     @Override
     public T getResult() {
         return data;
+    }
+
+    @Override
+    public boolean isSuccess() {
+        return false;
+    }
+
+    @Override
+    public int id() {
+        return 0;
     }
 
 //    public void setMsg(String msg) {

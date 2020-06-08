@@ -1,8 +1,5 @@
 package com.yyxnb.arch.delegate
 
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.LifecycleObserver
-import android.arch.lifecycle.OnLifecycleEvent
 import android.arch.lifecycle.ViewModel
 import android.content.Context
 import android.os.Bundle
@@ -12,63 +9,67 @@ import android.view.View
 import com.yyxnb.arch.annotations.BindViewModel
 import com.yyxnb.arch.base.IFragment
 import com.yyxnb.arch.livedata.ViewModelFactory
+import com.yyxnb.arch.utils.AppManager
 import com.yyxnb.common.MainThreadUtils.post
 import java.lang.reflect.Field
 
+/**
+ * FragmentLifecycleCallbacks 监听 Fragment 生命周期
+ * PS ：先走 Fragment 再走 FragmentLifecycleCallbacks
+ */
 class FragmentDelegateImpl(
         private var fragmentManager: FragmentManager?,
         private var fragment: Fragment?
-) : IFragmentDelegate, LifecycleObserver {
+) : IFragmentDelegate {
 
     private var iFragment: IFragment? = fragment as IFragment
+    private var delegate: FragmentDelegate? = null
 
-    override fun onAttached(context: Context?) {}
-
-    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
-    override fun onCreated(savedInstanceState: Bundle?) {
+    override fun onAttached(context: Context?) {
+        delegate = iFragment!!.getBaseDelegate()
+        delegate?.onAttach(context)
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
+    override fun onCreated(savedInstanceState: Bundle?) {
+        delegate?.onCreate(savedInstanceState)
+    }
+
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         initDeclaredFields()
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        iFragment?.initView(savedInstanceState)
-        //        iFragment.initViewData();
+        delegate?.onActivityCreated(savedInstanceState)
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
     override fun onStarted() {
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     override fun onResumed() {
+        delegate?.onResume()
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
     override fun onPaused() {
+        delegate?.onPause()
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     override fun onStopped() {
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {}
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     override fun onViewDestroyed() {
+        delegate?.onDestroyView()
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     override fun onDestroyed() {
+        delegate?.onDestroy()
+        AppManager.fragmentDelegates?.remove(iFragment.hashCode())
         fragmentManager = null
         fragment = null
         iFragment = null
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     override fun onDetached() {
     }
 

@@ -12,8 +12,9 @@ object ArchConfig : Serializable {
     const val FRAGMENT = "FRAGMENT"
     const val BUNDLE = "BUNDLE"
     const val REQUEST_CODE = "REQUEST_CODE"
-    const val FRAGMENT_FINISH = "FRAGMENT_FINISH"
-    const val NEED_LOGIN = "NEED_LOGIN"
+    const val MSG_EVENT = "MSG_EVENT"
+
+    const val NEED_LOGIN_CODE = -100
 
     /**
      * 侧滑
@@ -34,11 +35,6 @@ object ArchConfig : Serializable {
      * 状态栏文字颜色
      */
     var statusBarStyle = BarStyle.DarkContent
-
-    /**
-     * 状态栏是否隐藏
-     */
-    var statusBarHidden = false
 
     /**
      * 状态栏颜色

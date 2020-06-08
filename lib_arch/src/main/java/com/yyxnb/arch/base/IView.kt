@@ -1,13 +1,13 @@
 package com.yyxnb.arch.base
 
+import android.arch.lifecycle.LifecycleObserver
 import android.os.Bundle
 import android.support.annotation.LayoutRes
 
-interface IView {
+interface IView : LifecycleObserver {
     /**
      * 初始化布局
      */
-    @LayoutRes
     fun initLayoutResId(): Int = 0
 
     /**
@@ -18,15 +18,12 @@ interface IView {
     /**
      * 处理重量级数据、逻辑
      */
-    fun initViewData()
+    fun initViewData() {}
 
     /**
      * 初始化界面观察者的监听
      * 接收数据结果
      */
     fun initObservable() {}
-    /**
-     * 接收信息
-     */
-    //    void handleEvent(msg: MsgEvent?){}
+
 }
