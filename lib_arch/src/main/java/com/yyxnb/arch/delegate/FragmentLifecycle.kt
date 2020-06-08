@@ -50,7 +50,7 @@ object FragmentLifecycle : FragmentManager.FragmentLifecycleCallbacks() {
     }
 
     override fun onFragmentStopped(fm: FragmentManager, f: Fragment) {
-        fetchFragmentDelegateFromCache(f)?.onStoped()
+        fetchFragmentDelegateFromCache(f)?.onStopped()
     }
 
     override fun onFragmentSaveInstanceState(fm: FragmentManager, f: Fragment, outState: Bundle) {

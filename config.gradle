@@ -11,9 +11,9 @@ ext {
     ]
 
     versions = [
-            android_plugin      : '3.6.2',
-            kotlin              : '1.3.60',
-            kotlin_coroutines   : '1.3.2',
+            android_plugin      : '4.0.0',
+            kotlin              : '1.3.71',
+            kotlin_coroutines   : '1.3.7',
 
             support             : '28.0.0',
             arch_comp_lifecycle : '1.1.1',
@@ -40,9 +40,7 @@ ext {
 
             gson                : '2.8.6',
 
-            mmkv                : '1.0.24',
-
-            butterknife         : '9.0.0',
+            mmkv                : '1.1.2',
 
             leakcanary          : '1.6.3',
 
@@ -54,7 +52,6 @@ ext {
     build_plugins = [
             android_gradle    : [group: 'com.android.tools.build', name: 'gradle', version: versions.android_plugin],
             kotlin_gradle     : [group: 'org.jetbrains.kotlin', name: 'kotlin-gradle-plugin', version: versions.kotlin],
-            butterknife_gradle: [group: 'com.jakewharton', name: 'butterknife-gradle-plugin', version: versions.butterknife],
             //https://github.com/HujiangTechnology/gradle_plugin_android_aspectjx
             aspectjx_gradle   : [group: 'com.hujiang.aspectjx', name: 'gradle-android-plugin-aspectjx', version: '2.0.8']
     ]
@@ -140,6 +137,7 @@ ext {
 
             rximagepicker                  : [group: 'com.github.qingmei2', name: 'rximagepicker', version: '2.3.0-alpha03'],
             rxweaver                       : [group: 'com.github.qingmei2.rxweaver', name: 'rxweaver', version: '0.3.0'],
+
             //  https://github.com/JakeWharton/RxBinding
             rxbinding2                     : [group: 'com.jakewharton.rxbinding2', name: 'rxbinding', version: versions.rxbinding2],
             rxbinding2_v7                  : [group: 'com.jakewharton.rxbinding2', name: 'rxbinding-appcompat-v7', version: versions.rxbinding2],
@@ -165,9 +163,6 @@ ext {
             leak_canary_debug_support      : [group: 'com.squareup.leakcanary', name: 'leakcanary-support-fragment', version: versions.leakcanary],
             leak_canary_release            : [group: 'com.squareup.leakcanary', name: 'leakcanary-android-no-op', version: versions.leakcanary],
 
-            //https://github.com/JakeWharton/butterknife
-            butterknife                    : [group: 'com.jakewharton', name: 'butterknife', version: versions.butterknife],
-            butterknife_compiler           : [group: 'com.jakewharton', name: 'butterknife-compiler', version: versions.butterknife],
             //https://github.com/google/gson
             gson                           : [group: 'com.google.code.gson', name: 'gson', version: versions.gson],
 
@@ -201,7 +196,7 @@ ext {
             shimmerlayout                  : [group: 'io.supercharge', name: 'shimmerlayout', version: '2.1.0'],
 
             //https://github.com/JeremyLiao/LiveEventBus
-            live_event_bus                 : [group: 'com.jeremyliao', name: 'live-event-bus', version: '1.5.7'],
+            live_event_bus                 : [group: 'com.jeremyliao', name: 'live-event-bus', version: '1.7.2'],
 
             //https://github.com/anzewei/ParallaxBackLayout
             parallaxbacklayout             : [group: 'com.github.anzewei', name: 'parallaxbacklayout', version: '1.1.9'],

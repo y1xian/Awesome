@@ -112,8 +112,13 @@ android {
         cruncherEnabled false
     }
 
-    dataBinding {
-        enabled = true
+//    dataBinding {
+//        enabled = true
+//    }
+    // 4.0
+    buildFeatures {
+        dataBinding true
+        viewBinding true
     }
 
 }

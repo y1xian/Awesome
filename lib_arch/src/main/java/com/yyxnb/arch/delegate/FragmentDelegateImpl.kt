@@ -52,7 +52,7 @@ class FragmentDelegateImpl(
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    override fun onStoped() {
+    override fun onStopped() {
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {}

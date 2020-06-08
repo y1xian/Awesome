@@ -20,7 +20,7 @@ interface IFragmentDelegate {
 
     fun onPaused()
 
-    fun onStoped()
+    fun onStopped()
 
     fun onSaveInstanceState(outState: Bundle?)
 
