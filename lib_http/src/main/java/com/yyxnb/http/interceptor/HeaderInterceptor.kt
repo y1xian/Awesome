@@ -8,13 +8,13 @@ import java.util.*
 /**
  * 请求拦截器  统一添加请求头使用
  */
-class HeaderInterceptor(private val headerMaps: HashMap<String, Any>?) : Interceptor {
+class HeaderInterceptor(private val headerMaps: HashMap<String, Any>) : Interceptor {
 
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request().newBuilder()
         //避免某些服务器配置攻击,请求返回403 forbidden 问题
-        headerMaps!!["User-Agent"] = "Mozilla/5.0 (Android)"
+        headerMaps["User-Agent"] = "Mozilla/5.0 (Android)"
         headerMaps["Accept-Encoding"] = "gzip"
         headerMaps["Accept"] = "application/json"
         headerMaps["Content-Type"] = "application/json; charset=utf-8"

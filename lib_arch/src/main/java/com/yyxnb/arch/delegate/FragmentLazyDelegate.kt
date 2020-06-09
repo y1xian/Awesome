@@ -157,7 +157,7 @@ class FragmentLazyDelegate(mFragment: Fragment?) {
      * @return true fragment 不可见， false 父 fragment 可见
      */
     private val isParentInvisible: Boolean
-        private get() {
+        get() {
             val fragment = mFragment!!.parentFragment
             return fragment != null && !isSupportVisible
         }

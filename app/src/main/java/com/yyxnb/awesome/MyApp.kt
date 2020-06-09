@@ -5,11 +5,8 @@ import android.content.Context
 import android.support.multidex.MultiDex
 import com.scwang.smart.refresh.footer.ClassicsFooter
 import com.scwang.smart.refresh.header.ClassicsHeader
-import com.scwang.smart.refresh.header.MaterialHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
-import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.squareup.leakcanary.LeakCanary
-import com.yyxnb.http.config.HttpConfig
 
 class MyApp : Application() {
 
@@ -41,11 +38,11 @@ class MyApp : Application() {
 //                .putHeaderBaseUrl(URL_KEY_1, BASE_URL_MOCKY)
 //                .setOkClient(mClient);
 
-        HttpConfig.apply {
-            baseUrl = ""
-            retSuccess = "200"
-            logOpen = true
-        }
+//        HttpConfig.apply {
+//            baseUrl = ""
+//            retSuccess = "200"
+//            logOpen = true
+//        }
 
 //        HttpConfig.retSuccess = "200"
 

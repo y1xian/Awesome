@@ -1,10 +1,24 @@
-package com.yyxnb.awesome.bean;
+package com.yyxnb.awesome.bean
 
-import java.io.Serializable;
+import java.io.Serializable
 
-public class TikTokBean implements Serializable {
-
-
+data class TikTokBean
+(
+        var id: Int = 0,
+        var videoId: Int = 0,
+        var userId: Int = 0,
+        var itemId: Int = 0,
+        var commentCount: Int = 0,
+        var coverUrl: String? = null,
+        var videoUrl: String? = null,
+        var title: String? = null,
+        var state: Int = 0,
+        var type: Int = 0,
+        var description: Any? = null,
+        var likeCount: Int = 0,
+        var playCount: Int = 0,
+        var createTime: String? = null
+) : Serializable {
     /**
      * id : 2
      * videoId : 2
@@ -21,21 +35,5 @@ public class TikTokBean implements Serializable {
      * playCount : 23
      * createTime : 1575445406000
      */
-
-    public int id;
-    public int videoId;
-    public int userId;
-    public int itemId;
-    public int commentCount;
-    public String coverUrl;
-    public String videoUrl;
-    public String title;
-    public int state;
-    public int type;
-    public Object description;
-    public int likeCount;
-    public int playCount;
-    public String createTime;
-
 
 }

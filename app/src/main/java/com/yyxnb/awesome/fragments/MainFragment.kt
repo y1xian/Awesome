@@ -37,7 +37,7 @@ class MainFragment : AbsListFragment<MainBean, MainViewModel>() {
             }
         })
         val manager = GridLayoutManager(context, 2)
-        mAdapter.setSpanSizeLookup(MultiItemTypePagedAdapter.SpanSizeLookup { gridLayoutManager: GridLayoutManager?, position: Int ->
+        mAdapter.setSpanSizeLookup(MultiItemTypePagedAdapter.SpanSizeLookup { _: GridLayoutManager?, position: Int ->
             if (mAdapter.getData().get(position)?.type == 1) {
                 return@SpanSizeLookup 2
             }

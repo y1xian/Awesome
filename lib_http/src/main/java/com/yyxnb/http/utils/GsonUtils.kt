@@ -65,9 +65,7 @@ object GsonUtils {
      */
     fun gsonString(`object`: Any?): String? {
         var gsonString: String? = null
-        if (gson != null) {
-            gsonString = gson.toJson(`object`)
-        }
+        gsonString = gson.toJson(`object`)
         return gsonString
     }
 
@@ -80,9 +78,7 @@ object GsonUtils {
      */
     fun <T> gsonToBean(gsonString: String?, cls: Class<T>?): T? {
         var t: T? = null
-        if (gson != null) {
-            t = gson.fromJson(gsonString, cls)
-        }
+        t = gson.fromJson(gsonString, cls)
         return t
     }
 
@@ -96,9 +92,7 @@ object GsonUtils {
      */
     fun <T> gsonToList(gsonString: String?, cls: Class<T>?): List<T>? {
         var list: List<T>? = null
-        if (gson != null) {
-            list = gson.fromJson(gsonString, object : TypeToken<List<T>?>() {}.type)
-        }
+        list = gson.fromJson(gsonString, object : TypeToken<List<T>?>() {}.type)
         return list
     }
 
@@ -129,10 +123,8 @@ object GsonUtils {
      */
     fun <T> GsonToListMaps(gsonString: String?): List<Map<String, T>>? {
         var list: List<Map<String, T>>? = null
-        if (gson != null) {
-            list = gson.fromJson(gsonString,
-                    object : TypeToken<List<Map<String?, T>?>?>() {}.type)
-        }
+        list = gson.fromJson(gsonString,
+                object : TypeToken<List<Map<String?, T>?>?>() {}.type)
         return list
     }
 
@@ -144,9 +136,7 @@ object GsonUtils {
      */
     fun <T> gsonToMaps(gsonString: String?): Map<String, T>? {
         var map: Map<String, T>? = null
-        if (gson != null) {
-            map = gson.fromJson(gsonString, object : TypeToken<Map<String?, T>?>() {}.type)
-        }
+        map = gson.fromJson(gsonString, object : TypeToken<Map<String?, T>?>() {}.type)
         return map
     }
 

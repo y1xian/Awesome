@@ -6,10 +6,8 @@ import android.view.View
 import com.madreain.libhulk.http.exception.NetWorkException
 import com.madreain.libhulk.http.exception.ResultException
 import com.madreain.libhulk.http.exception.ReturnCodeException
-import com.madreain.libhulk.http.interceptor.IReturnCodeErrorInterceptor
 import com.yyxnb.common.AppConfig
 import com.yyxnb.common.NetworkUtils
-import com.yyxnb.http.config.HttpConfig
 import com.yyxnb.http.exception.ResponseThrowable
 import com.yyxnb.common.interfaces.IData
 import com.yyxnb.http.interfaces.RequestDisplay
@@ -59,7 +57,7 @@ abstract class BaseViewModel : ViewModel(), LifecycleObserver {
      * @param view
      *
      **/
-    fun <T> launchOnlyresult(
+    fun <T> launchOnlyResult(
             block: suspend CoroutineScope.() -> IData<T>,
             //成功
             success: (T) -> Unit = {},
@@ -71,7 +69,6 @@ abstract class BaseViewModel : ViewModel(), LifecycleObserver {
                     if (it is NetWorkException) {
                         onNetWorkError { reTry() }
                     } else if (it is ReturnCodeException) {
-                        isIntercepted(it)
                         onReturnCodeError(
                                 it.returnCode,
                                 it.message
@@ -136,32 +133,8 @@ abstract class BaseViewModel : ViewModel(), LifecycleObserver {
             success: suspend CoroutineScope.(T) -> Unit
     ) {
         coroutineScope {
-
             //接口成功返回后判断是否是增删改查成功，不满足的话，返回异常
-            if (HttpConfig.retSuccessList != null) {
-                //成功
-                if (HttpConfig.retSuccessList!!.contains(response.getCode())) {
-                    if (response.getResult() == null || response.getResult().toString() == "[]") {
-                        //完成的回调所有弹窗消失
-//                        viewChange.dismissDialog.call()
-//                        viewChange.showEmpty.call()
-                    } else {
-                        success(response.getResult())
-                        //完成的回调所有弹窗消失
-//                        viewChange.dismissDialog.call()
-//                        viewChange.restore.call()
-                    }
-                } else {
-                    //状态码错误
-                    throw ResponseThrowable(
-                            response.getCode()!!,
-                            response.getMsg()!!
-                    )
-                }
-            } else {
-                //成功
-                AppConfig.log("${response.getCode()}  ${HttpConfig.retSuccess}")
-                if (response.getCode().equals(HttpConfig.retSuccess)) {
+                if (response.isSuccess()) {
                     if (response.getResult() == null || response.getResult().toString() == "[]") {
                         AppConfig.log("eeeeee")
                         //完成的回调所有弹窗消失
@@ -181,7 +154,6 @@ abstract class BaseViewModel : ViewModel(), LifecycleObserver {
                             response.getMsg()!!
                     )
                 }
-            }
         }
     }
 
@@ -278,21 +250,6 @@ abstract class BaseViewModel : ViewModel(), LifecycleObserver {
 //                viewChange.showNetworkError.value = message
             }
         }
-    }
-
-    /**
-     * 判断是否被拦截
-     */
-    private fun isIntercepted(t: Throwable): Boolean {
-        var isIntercepted = false //是否被拦截了
-        for (interceptor: IReturnCodeErrorInterceptor in HttpConfig.retCodeInterceptors!!) {
-            if (interceptor.intercept((t as ReturnCodeException).returnCode)) {
-                isIntercepted = true
-                interceptor.doWork((t as ReturnCodeException).returnCode, t.message)
-                break
-            }
-        }
-        return isIntercepted
     }
 
     override fun onCleared() {

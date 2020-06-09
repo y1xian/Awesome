@@ -123,7 +123,7 @@ object JsonUtils {
                         sb.append('0')
                         k++
                     }
-                    sb.append(ss.toUpperCase())
+                    sb.append(ss.toUpperCase(Locale.ROOT))
                 } else {
                     sb.append(ch)
                 }
@@ -150,6 +150,7 @@ object JsonUtils {
         } else if (obj is String) {
             json.append("\r\n").append(formatJson(obj.toString())).append("\r\n")
         } else if (obj is Array<*>) {
+            @Suppress("UNCHECKED_CAST")
             json.append(arrayToJson(obj as Array<Any?>?))
         } else if (obj is List<*>) {
             json.append(listToJson(obj as List<*>?))
@@ -176,9 +177,7 @@ object JsonUtils {
      */
     fun beanToJson(bean: Any?): String? {
         var gsonString: String? = null
-        if (gson != null) {
-            gsonString = gson.toJson(bean)
-        }
+        gsonString = gson.toJson(bean)
         return gsonString
     }
 
@@ -223,9 +222,7 @@ object JsonUtils {
      */
     fun gsonString(`object`: Any?): String? {
         var gsonString: String? = null
-        if (gson != null) {
-            gsonString = gson.toJson(`object`)
-        }
+        gsonString = gson.toJson(`object`)
         return gsonString
     }
 
@@ -234,9 +231,7 @@ object JsonUtils {
      */
     fun <T> gsonToBean(gsonString: String?, cls: Class<T>?): T? {
         var t: T? = null
-        if (gson != null) {
-            t = gson.fromJson(gsonString, cls)
-        }
+        t = gson.fromJson(gsonString, cls)
         return t
     }
 
@@ -246,9 +241,7 @@ object JsonUtils {
      */
     fun <T> gsonToList(gsonString: String?, cls: Class<T>?): List<T>? {
         var list: List<T>? = null
-        if (gson != null) {
-            list = gson.fromJson(gsonString, object : TypeToken<List<T>?>() {}.type)
-        }
+        list = gson.fromJson(gsonString, object : TypeToken<List<T>?>() {}.type)
         return list
     }
 
@@ -309,10 +302,8 @@ object JsonUtils {
      */
     fun <T> parseJSONList(jsonStr: String?): List<Map<String, T>>? {
         var list: List<Map<String, T>>? = null
-        if (gson != null) {
-            list = gson.fromJson(jsonStr,
-                    object : TypeToken<List<Map<String?, T>?>?>() {}.type)
-        }
+        list = gson.fromJson(jsonStr,
+                object : TypeToken<List<Map<String?, T>?>?>() {}.type)
         return list
     }
 
@@ -321,9 +312,7 @@ object JsonUtils {
      */
     fun <T> parseJSONMap(jsonStr: String?): Map<String, T>? {
         var map: Map<String, T>? = null
-        if (gson != null) {
-            map = gson.fromJson(jsonStr, object : TypeToken<Map<String?, T>?>() {}.type)
-        }
+        map = gson.fromJson(jsonStr, object : TypeToken<Map<String?, T>?>() {}.type)
         return map
     }
 

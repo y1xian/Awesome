@@ -148,6 +148,6 @@ class DialogFragment : Fragment(), IFragment {
     }
 
     override fun initViewData() {
-        mAdapter.setDataItems(DataConfig.getDialogList())
+        mAdapter.setDataItems(DataConfig.dialogList)
     }
 }

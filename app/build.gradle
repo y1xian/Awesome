@@ -15,7 +15,7 @@ android {
 
         // 更新至Android Studio 3.3 gradle 4.10.1
         variant.outputs.all {
-            outputFileName = "app_${variant.versionCode}.${variant.versionName}.apk"
+            outputFileName = "app_${variant.versionName}.${variant.versionCode}.apk"
         }
 
     }
@@ -34,7 +34,7 @@ dependencies {
 
     //glide
     api libs.glide
-    annotationProcessor libs.glide_compiler
+    kapt libs.glide_compiler
 
     //https://github.com/scwang90/SmartRefreshLayout
     implementation 'com.scwang.smart:refresh-layout-kernel:2.0.0-alpha-1'      //核心必须依赖

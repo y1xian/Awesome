@@ -50,7 +50,7 @@ class ActivityDelegate(private var iActivity: IActivity?) : CoroutineScope by Ma
         if (!isExtends) {
             iActivity?.apply {
                 if (layoutRes != 0 || initLayoutResId() != 0) {
-                    mActivity!!.setContentView(if (layoutRes == 0) initLayoutResId() else layoutRes)
+                    mActivity?.setContentView(if (layoutRes == 0) initLayoutResId() else layoutRes)
                 }
             }
         }
@@ -120,20 +120,19 @@ class ActivityDelegate(private var iActivity: IActivity?) : CoroutineScope by Ma
      */
     fun initAttributes() {
         post(Runnable {
-            val bindRes = iActivity!!.javaClass.getAnnotation(BindRes::class.java)
-            if (bindRes != null) {
-                layoutRes = bindRes.layoutRes
-                fitsSystemWindows = bindRes.fitsSystemWindows
-                statusBarTranslucent = bindRes.statusBarTranslucent
-                if (bindRes.statusBarStyle != BarStyle.None) {
-                    statusBarDarkTheme = bindRes.statusBarStyle
+            iActivity?.javaClass?.getAnnotation(BindRes::class.java)?.let {
+                layoutRes = it.layoutRes
+                fitsSystemWindows = it.fitsSystemWindows
+                statusBarTranslucent = it.statusBarTranslucent
+                if (it.statusBarStyle != BarStyle.None) {
+                    statusBarDarkTheme = it.statusBarStyle
                 }
-                if (bindRes.statusBarColor != 0) {
-                    statusBarColor = bindRes.statusBarColor
+                if (it.statusBarColor != 0) {
+                    statusBarColor = it.statusBarColor
                 }
-                needLogin = bindRes.needLogin
-                isExtends = bindRes.isExtends
-                isContainer = bindRes.isContainer
+                needLogin = it.needLogin
+                isExtends = it.isExtends
+                isContainer = it.isContainer
                 // 如果需要登录，并且处于未登录状态下，发送通知
                 if (needLogin && !ArchConfig.needLogin) {
                     Bus.post(MsgEvent(ArchConfig.NEED_LOGIN_CODE))

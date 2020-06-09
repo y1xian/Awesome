@@ -4,15 +4,14 @@ import android.arch.lifecycle.MutableLiveData
 import com.yyxnb.awesome.api.IService
 import com.yyxnb.awesome.bean.StateData
 import com.yyxnb.awesome.bean.TikTokBean
+import com.yyxnb.awesome.data.Http
 import com.yyxnb.common.AppConfig
 import com.yyxnb.http.BaseViewModel
-import com.yyxnb.http.RetrofitFactory
-import com.yyxnb.http.config.HttpConfig
 import com.yyxnb.http.interfaces.RequestDisplay
 
 class NetWorkViewModel : BaseViewModel() {
 
-    private val mApi: IService = RetrofitFactory.create(IService::class.java)
+    private val mApi: IService = Http.create(IService::class.java)
 
     var result = MutableLiveData<StateData<TikTokBean>>()
 
@@ -23,9 +22,8 @@ class NetWorkViewModel : BaseViewModel() {
 
 
 //                    page++;
-        AppConfig.log(" vvvvvvv   1 ${HttpConfig.retSuccess}")
 
-        launchOnlyresult(
+        launchOnlyResult(
                 //调用接口方法
                 block = {
                     AppConfig.log(" vvvvvvv   2")

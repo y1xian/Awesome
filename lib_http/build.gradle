@@ -13,9 +13,6 @@ dependencies {
     api([libs.okhttp3, libs.okhttp3_logging])
     // gson  https://github.com/google/gson
     api libs.gson
-    //room
-    api libs.arch_comp_room
-    annotationProcessor libs.arch_comp_room_compiler
     //work
     api libs.arch_comp_work
 }
