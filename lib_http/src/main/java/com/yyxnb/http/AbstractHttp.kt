@@ -1,6 +1,6 @@
 package com.yyxnb.http
 
-import com.yyxnb.common.AppGlobals.application
+import com.yyxnb.common.AppConfig
 import com.yyxnb.http.interceptor.CacheInterceptor
 import com.yyxnb.http.interceptor.HeaderInterceptor
 import com.yyxnb.http.interceptor.LoggingInterceptor
@@ -122,7 +122,7 @@ abstract class AbstractHttp {
             builder.addInterceptor(logInterceptor)
         }
         if (saveCache()) {
-            val externalCacheDir = application.applicationContext.externalCacheDir
+            val externalCacheDir = AppConfig.getInstance().context.externalCacheDir
             if (null != externalCacheDir) {
                 builder.cache(Cache(File(externalCacheDir.path + "/HttpCacheData"), 20 * 1024 * 1024))
                 builder.addInterceptor(CacheInterceptor())

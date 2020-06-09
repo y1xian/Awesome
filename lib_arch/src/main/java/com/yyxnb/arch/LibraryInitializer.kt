@@ -20,16 +20,16 @@ import me.jessyan.autosize.AutoSizeConfig
 class LibraryInitializer : ContentProvider() {
     override fun onCreate(): Boolean {
         // 初始化
-        val context = AppConfig.getContext()
+        val context = AppConfig.getInstance().context
         AutoSizeConfig.getInstance().isCustomFragment = true
 
         //突破65535的限制
         MultiDex.install(context)
 
         //系统会在每个 Activity 执行完对应的生命周期后都调用这个实现类中对应的方法
-        AppConfig.getApp().registerActivityLifecycleCallbacks(ActivityLifecycle)
+        AppConfig.getInstance().app.registerActivityLifecycleCallbacks(ActivityLifecycle)
         // 侧滑监听
-        AppConfig.getApp().registerActivityLifecycleCallbacks(ParallaxHelper.getInstance())
+        AppConfig.getInstance().app.registerActivityLifecycleCallbacks(ParallaxHelper.getInstance())
         // 应用监听
         ProcessLifecycleOwner.get().lifecycle.addObserver(AppLifeObserver())
 
@@ -42,7 +42,7 @@ class LibraryInitializer : ContentProvider() {
                 .setTag("---Awesome---")
                 //是否显示日志，默认true，发布时最好关闭
                 .setShowThreadInfo(true)
-                .setDebug(AppConfig.isDebug)
+                .setDebug(AppConfig.getInstance().isDebug)
         return true
     }
 

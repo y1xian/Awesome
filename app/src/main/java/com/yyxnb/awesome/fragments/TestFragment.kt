@@ -11,8 +11,8 @@ import com.yyxnb.arch.annotations.BindViewModel
 import com.yyxnb.arch.base.IFragment
 import com.yyxnb.awesome.R
 import com.yyxnb.awesome.vm.TestViewModel
-import com.yyxnb.common.AppConfig.log
 import com.yyxnb.common.log.LogUtils
+import com.yyxnb.ktx.log
 
 /**
  * 实现IFragment.

@@ -1,2 +1,3 @@
-rootProject.name='Awesome'
-include ':app', ':lib_arch', ':lib_common', ':lib_utils', ':lib_adapter', ':lib_view', ':lib_http'
+include ':lib_ktx'
+rootProject.name = 'Awesome'
+include ':app', ':lib_arch', ':lib_http'

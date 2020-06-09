@@ -6,7 +6,6 @@ import android.view.View
 import com.madreain.libhulk.http.exception.NetWorkException
 import com.madreain.libhulk.http.exception.ResultException
 import com.madreain.libhulk.http.exception.ReturnCodeException
-import com.yyxnb.common.AppConfig
 import com.yyxnb.common.NetworkUtils
 import com.yyxnb.http.exception.ResponseThrowable
 import com.yyxnb.common.interfaces.IData
@@ -19,11 +18,6 @@ abstract class BaseViewModel : ViewModel(), LifecycleObserver {
 
     //网络请求展示类型
     private var type: RequestDisplay? = null
-
-    /**
-     * 网络相关工具
-     */
-    val networkUtils: NetworkUtils by lazy { NetworkUtils }
 
     //重试的监听
     var listener: View.OnClickListener? = null
@@ -63,7 +57,7 @@ abstract class BaseViewModel : ViewModel(), LifecycleObserver {
             success: (T) -> Unit = {},
             //错误 根据错误进行不同分类
             error: (Throwable) -> Unit = {
-                if (!networkUtils.isConnected) {
+                if (!NetworkUtils.isConnected()) {
                     onNetWorkError { reTry() }//没网
                 } else {
                     if (it is NetWorkException) {
@@ -136,12 +130,10 @@ abstract class BaseViewModel : ViewModel(), LifecycleObserver {
             //接口成功返回后判断是否是增删改查成功，不满足的话，返回异常
                 if (response.isSuccess()) {
                     if (response.getResult() == null || response.getResult().toString() == "[]") {
-                        AppConfig.log("eeeeee")
                         //完成的回调所有弹窗消失
 //                        viewChange.dismissDialog.call()
 //                        viewChange.showEmpty.call()
                     } else {
-                        AppConfig.log(" sssss")
                         success(response.getResult())
                         //完成的回调所有弹窗消失
 //                        viewChange.dismissDialog.call()

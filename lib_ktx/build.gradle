@@ -1,0 +1,8 @@
+ext.isLibrary = true
+apply from: rootProject.file('lib.gradle')
+
+dependencies {
+    api libs.widget_common
+    // jetpack
+    api libs.arch_comp_extensions
+}

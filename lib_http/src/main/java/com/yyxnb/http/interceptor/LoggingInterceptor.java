@@ -36,7 +36,7 @@ public class LoggingInterceptor implements HttpLoggingInterceptor.Logger {
             mMessage.append(message).append("\r\n");
             // 请求或者响应结束，打印整条日志
             if (message.startsWith("<-- END HTTP")) {
-                AppConfig.INSTANCE.log("Http", mMessage.toString());
+                AppConfig.getInstance().log("Http", mMessage.toString());
             }
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();

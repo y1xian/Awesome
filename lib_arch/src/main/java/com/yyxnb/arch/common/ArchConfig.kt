@@ -4,7 +4,7 @@ import android.graphics.Color
 import com.yyxnb.arch.R
 import com.yyxnb.arch.annotations.BarStyle
 import com.yyxnb.arch.annotations.SwipeStyle
-import com.yyxnb.common.AppConfig.getContext
+import com.yyxnb.common.AppConfig
 import java.io.Serializable
 
 object ArchConfig : Serializable {
@@ -39,7 +39,7 @@ object ArchConfig : Serializable {
     /**
      * 状态栏颜色
      */
-    var statusBarColor = getContext().resources.getColor(R.color.statusBar)
+    var statusBarColor = AppConfig.getInstance().context.resources.getColor(R.color.statusBar)
 
     /**
      * 如果状态栏处于白色且状态栏文字也处于白色，避免看不见

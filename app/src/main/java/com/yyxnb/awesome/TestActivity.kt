@@ -6,8 +6,8 @@ import android.support.v7.app.AppCompatActivity
 import com.yyxnb.arch.annotations.BindViewModel
 import com.yyxnb.arch.base.IActivity
 import com.yyxnb.awesome.vm.TestViewModel
-import com.yyxnb.common.AppConfig.log
 import com.yyxnb.common.log.LogUtils
+import com.yyxnb.ktx.log
 
 class TestActivity : AppCompatActivity(), IActivity {
     @BindViewModel

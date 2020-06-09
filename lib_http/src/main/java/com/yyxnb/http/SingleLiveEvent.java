@@ -21,7 +21,7 @@ public class SingleLiveEvent<T> extends MutableLiveData<T> {
     public void observe(LifecycleOwner owner, final Observer<T> observer) {
 
         if (hasActiveObservers()) {
-            AppConfig.INSTANCE.log(TAG, "Multiple observers registered but only one will be notified of changes.");
+            AppConfig.getInstance().log(TAG, "Multiple observers registered but only one will be notified of changes.");
         }
 
         // Observe the internal MutableLiveData

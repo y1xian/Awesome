@@ -4,6 +4,7 @@ import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.OnLifecycleEvent
 import com.yyxnb.common.AppConfig
+import com.yyxnb.ktx.log
 
 /**
  * 监听整个应用应用状态，与Activity数量无关
@@ -15,7 +16,7 @@ class AppLifeObserver : LifecycleObserver {
      */
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun onCreate() {
-        AppConfig.log("应用首次创建")
+        log("应用首次创建")
     }
 
     /**
@@ -23,7 +24,7 @@ class AppLifeObserver : LifecycleObserver {
      */
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun onStart() {
-        AppConfig.log("应用进入前台")
+        log("应用进入前台")
     }
 
     /**
@@ -32,7 +33,7 @@ class AppLifeObserver : LifecycleObserver {
      */
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     fun onStop() {
-        AppConfig.log("应用进入后台")
+        log("应用进入后台")
     }
 
     /**
@@ -40,7 +41,7 @@ class AppLifeObserver : LifecycleObserver {
      */
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     fun onDestroy() {
-        AppConfig.log("ON_DESTROY")
+        log("ON_DESTROY")
     }
 
 }

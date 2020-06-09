@@ -8,6 +8,7 @@ import com.yyxnb.awesome.data.Http
 import com.yyxnb.common.AppConfig
 import com.yyxnb.http.BaseViewModel
 import com.yyxnb.http.interfaces.RequestDisplay
+import com.yyxnb.ktx.log
 
 class NetWorkViewModel : BaseViewModel() {
 
@@ -18,7 +19,7 @@ class NetWorkViewModel : BaseViewModel() {
     fun videoList(value: String) {
 
 //        val map = hashMapOf("key" to value)
-        val map = hashMapOf<String,String>()
+        val map = hashMapOf<String, String>()
 
 
 //                    page++;
@@ -26,18 +27,18 @@ class NetWorkViewModel : BaseViewModel() {
         launchOnlyResult(
                 //调用接口方法
                 block = {
-                    AppConfig.log(" vvvvvvv   2")
+                    log(" vvvvvvv   2")
                     mApi.getVideoList(map)
                 },
                 //重试
                 reTry = {
-                    AppConfig.log(" vvvvvvv   rrrrr")
+                    log(" vvvvvvv   rrrrr")
                     //调用重试的方法
                     videoList(value)
                 },
                 //成功
                 success = {
-                    AppConfig.log(" vvvvvvv   ssssssss")
+                    log(" vvvvvvv   ssssssss")
                     //成功回调
                     result.value = it
 //                    result.postValue(it)

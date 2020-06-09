@@ -13,7 +13,7 @@ class CacheInterceptor : Interceptor {
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         var request = chain.request()
-        return if (isAvailable) {
+        return if (isAvailable()) {
             val response = chain.proceed(request)
             // 从缓存读取60秒
             val maxAge = 60

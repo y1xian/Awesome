@@ -71,9 +71,6 @@ class MainFragment : AbsListFragment<MainBean, MainViewModel>() {
             22 -> startFragment(TestFragment())
             23 -> startFragment(VpMainFragment())
             31 -> startFragment(NetWorkFragment())
-            41 -> startFragment(TitleFragment())
-            42 -> startFragment(DialogFragment())
-            43 -> startFragment(TagFragment())
             else -> {
             }
         }

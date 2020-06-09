@@ -58,7 +58,6 @@ open class ContainerActivity : BaseActivity() {
             setRootFragment(fragment as IFragment, R.id.fragmentContent)
         } catch (e: Exception) {
             e.printStackTrace()
-            AppConfig.log(e.message.toString())
         }
     }
 
