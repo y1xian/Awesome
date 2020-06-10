@@ -10,7 +10,6 @@ import com.github.anzewei.parallaxbacklayout.ParallaxHelper
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.yyxnb.arch.delegate.ActivityLifecycle
 import com.yyxnb.common.AppConfig
-import com.yyxnb.common.BuildConfig
 import com.yyxnb.common.log.LogUtils
 import me.jessyan.autosize.AutoSizeConfig
 
@@ -19,30 +18,33 @@ import me.jessyan.autosize.AutoSizeConfig
  */
 class LibraryInitializer : ContentProvider() {
     override fun onCreate(): Boolean {
-        // 初始化
-        val context = AppConfig.getInstance().context
-        AutoSizeConfig.getInstance().isCustomFragment = true
 
-        //突破65535的限制
-        MultiDex.install(context)
+        AppConfig.getInstance().apply {
+            // 初始化
+            val context = context
+            AutoSizeConfig.getInstance().isCustomFragment = true
 
-        //系统会在每个 Activity 执行完对应的生命周期后都调用这个实现类中对应的方法
-        AppConfig.getInstance().app.registerActivityLifecycleCallbacks(ActivityLifecycle)
-        // 侧滑监听
-        AppConfig.getInstance().app.registerActivityLifecycleCallbacks(ParallaxHelper.getInstance())
-        // 应用监听
-        ProcessLifecycleOwner.get().lifecycle.addObserver(AppLifeObserver())
+            //突破65535的限制
+            MultiDex.install(context)
 
-        LiveEventBus
-                .config()
-                .enableLogger(BuildConfig.DEBUG)
+            //系统会在每个 Activity 执行完对应的生命周期后都调用这个实现类中对应的方法
+            app.registerActivityLifecycleCallbacks(ActivityLifecycle)
+            // 侧滑监听
+            app.registerActivityLifecycleCallbacks(ParallaxHelper.getInstance())
+            // 应用监听
+            ProcessLifecycleOwner.get().lifecycle.addObserver(AppLifeObserver())
 
-        //设置全局tag
-        LogUtils.init()
-                .setTag("---Awesome---")
-                //是否显示日志，默认true，发布时最好关闭
-                .setShowThreadInfo(true)
-                .setDebug(AppConfig.getInstance().isDebug)
+            LiveEventBus
+                    .config()
+                    .enableLogger(isDebug)
+
+            //设置全局tag
+            LogUtils.init()
+                    .setTag("---Awesome---")
+                    //是否显示日志，默认true，发布时最好关闭
+                    .setShowThreadInfo(isDebug).isDebug = isDebug
+        }
+
         return true
     }
 

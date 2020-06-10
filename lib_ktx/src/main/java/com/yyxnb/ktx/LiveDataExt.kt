@@ -91,14 +91,6 @@ inline fun <T> LiveData<T>.filter(crossinline predicate: (T?) -> Boolean): LiveD
 }
 
 /**
- * Emits at most 1 item and returns a SingleLiveData
- * 产生仅产生一个项目的SingleLiveData。
- */
-//fun <T> LiveData<T>.first(): SingleLiveData<T> {
-//    return SingleLiveData(this)
-//}
-
-/**
  * Emits the first n valueus
  * 产生仅产生前n个项目的LiveData。
  */
@@ -165,35 +157,6 @@ inline fun <T> LiveData<T>.skipUntil(crossinline predicate: (T?) -> Boolean): Li
     }
     return mutableLiveData
 }
-
-/**
- * emits the item that was emitted at `index` position
- * Note: This only works for elements that were emitted `after` the `elementAt` is applied.
- * 发出在“index”位置发出的项
- * 注意：这只适用于应用“elementat”之后发出的元素。
- */
-//fun <T> LiveData<T>.elementAt(index: Int): SingleLiveData<T> {
-//    val mutableLiveData: MediatorLiveData<T> = MediatorLiveData()
-//    var currentIndex = 0
-//    if (this.value != null)
-//        currentIndex = -1
-//    mutableLiveData.addSource(this) {
-//        if (currentIndex == index) {
-//            mutableLiveData.value = it
-//            mutableLiveData.removeSource(this)
-//        }
-//        currentIndex++
-//    }
-//    return SingleLiveData(mutableLiveData)
-//}
-
-/**
- * Emits only the values that are not null
- * 永远不会向观察者发出空值（输出a NonNullLiveData）。
- */
-//fun <T> LiveData<T>.nonNull(): NonNullLiveData<T> {
-//    return NonNullLiveData(this)
-//}
 
 /**
  * Emits the default value when a null value is emitted
@@ -616,43 +579,6 @@ fun <X, Y, T, Z> combineLatest(first: LiveData<X>, second: LiveData<Y>, third: L
     }
     return finalLiveData
 }
-
-/**
- * Converts the LiveData to `SingleLiveData` and concats it with the `otherLiveData` and emits their
- * values one by one
- * 将livedata转换为“singlelivedata”，并将其与“otherlivedata”连接，并发出
- * 价值观一个接一个
- */
-//fun <T> LiveData<T>.then(otherLiveData: LiveData<T>): LiveData<T> {
-//    return if (this is SingleLiveData) {
-//        when (otherLiveData) {
-//            is SingleLiveData -> SingleLiveDataConcat(this, otherLiveData)
-//            else -> SingleLiveDataConcat(this, otherLiveData.toSingleLiveData())
-//        }
-//    } else {
-//        when (otherLiveData) {
-//            is SingleLiveData -> SingleLiveDataConcat(this.toSingleLiveData(), otherLiveData)
-//            else -> SingleLiveDataConcat(this.toSingleLiveData(), otherLiveData.toSingleLiveData())
-//        }
-//    }
-//}
-
-//fun <T> LiveData<T>.concatWith(otherLiveData: LiveData<T>) = then(otherLiveData)
-
-/**
- * Concats the given LiveData together and emits their values one by one in order
- * 将给定的livedata连接在一起，并按顺序逐个发出它们的值
- */
-//fun <T> concat(vararg liveData: LiveData<T>): LiveData<T> {
-//    val liveDataList = mutableListOf<SingleLiveData<T>>()
-//    liveData.forEach {
-//        if (it is SingleLiveData<T>)
-//            liveDataList.add(it)
-//        else
-//            liveDataList.add(it.toSingleLiveData())
-//    }
-//    return SingleLiveDataConcat(liveDataList)
-//}
 
 /**
  * Samples the current live data with other live data, resulting in a live data that emits the last

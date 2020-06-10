@@ -1,23 +1,18 @@
 package com.yyxnb.http
 
 import android.arch.lifecycle.LifecycleObserver
+import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.view.View
-import com.madreain.libhulk.http.exception.NetWorkException
-import com.madreain.libhulk.http.exception.ResultException
-import com.madreain.libhulk.http.exception.ReturnCodeException
-import com.yyxnb.common.NetworkUtils
-import com.yyxnb.http.exception.ResponseThrowable
 import com.yyxnb.common.interfaces.IData
-import com.yyxnb.http.interfaces.RequestDisplay
+import com.yyxnb.http.exception.ResponseThrowable
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 abstract class BaseViewModel : ViewModel(), LifecycleObserver {
 
-    //网络请求展示类型
-    private var type: RequestDisplay? = null
+    val status = MutableLiveData<Status>()
 
     //重试的监听
     var listener: View.OnClickListener? = null
@@ -47,7 +42,6 @@ abstract class BaseViewModel : ViewModel(), LifecycleObserver {
      * @param success 成功回调
      * @param error 失败回调
      * @param complete  完成回调（无论成功失败都会调用）
-     * @param type RequestDisplay类型 NULL无交互  TOAST  REPLACE 替换
      * @param view
      *
      **/
@@ -57,43 +51,15 @@ abstract class BaseViewModel : ViewModel(), LifecycleObserver {
             success: (T) -> Unit = {},
             //错误 根据错误进行不同分类
             error: (Throwable) -> Unit = {
-                if (!NetworkUtils.isConnected()) {
-                    onNetWorkError { reTry() }//没网
-                } else {
-                    if (it is NetWorkException) {
-                        onNetWorkError { reTry() }
-                    } else if (it is ReturnCodeException) {
-                        onReturnCodeError(
-                                it.returnCode,
-                                it.message
-                        ) { reTry() }
-                    } else if (it is ResultException) {
-                        onTEmpty { reTry() }
-                    } else {
-                        onNetWorkError { reTry() } //UnknownHostException 1：服务器地址错误；2：网络未连接
-                    }
-                }
+                //UnknownHostException 1：服务器地址错误；2：网络未连接
+                reTry()
             },
             //完成
             complete: () -> Unit = {},
             //重试
-            reTry: () -> Unit = {},
-            //接口操作交互类型
-            type: RequestDisplay = RequestDisplay.NULL
+            reTry: () -> Unit = {}
     ) {
-        //接口操作交互类型赋值
-        this.type = type
-        //开始请求接口前
-        when (type) {
-            RequestDisplay.NULL -> {
-            }
-            RequestDisplay.TOAST -> {
-//                viewChange.showDialogProgress.value = ""
-            }
-            RequestDisplay.REPLACE -> {
-//                viewChange.showLoading.call()
-            }
-        }
+        status.postValue(Status.LOADING)
         //正式请求接口
         launchUI {
             //异常处理
@@ -107,10 +73,12 @@ abstract class BaseViewModel : ViewModel(), LifecycleObserver {
                         }
                     },
                     {
+                        status.postValue(Status.ERROR)
                         //接口失败返回
                         error(it)
                     },
                     {
+                        status.postValue(Status.COMPLETE)
                         //接口完成
                         complete()
                     }
@@ -128,24 +96,17 @@ abstract class BaseViewModel : ViewModel(), LifecycleObserver {
     ) {
         coroutineScope {
             //接口成功返回后判断是否是增删改查成功，不满足的话，返回异常
-                if (response.isSuccess()) {
-                    if (response.getResult() == null || response.getResult().toString() == "[]") {
-                        //完成的回调所有弹窗消失
-//                        viewChange.dismissDialog.call()
-//                        viewChange.showEmpty.call()
-                    } else {
-                        success(response.getResult())
-                        //完成的回调所有弹窗消失
-//                        viewChange.dismissDialog.call()
-//                        viewChange.restore.call()
-                    }
-                } else {
-                    //状态码错误
-                    throw ResponseThrowable(
-                            response.getCode()!!,
-                            response.getMsg()!!
-                    )
-                }
+            if (response.isSuccess) {
+                status.postValue(Status.SUCCESS)
+                success(response.result)
+            } else {
+                status.postValue(Status.ERROR)
+                //状态码错误
+                throw ResponseThrowable(
+                        response.code!!,
+                        response.msg!!
+                )
+            }
         }
     }
 
@@ -166,80 +127,6 @@ abstract class BaseViewModel : ViewModel(), LifecycleObserver {
                 e.printStackTrace()
             } finally {
                 complete()
-            }
-        }
-    }
-
-
-    /**
-     * 数据为空
-     */
-    private fun onTEmpty( //重试
-            reTry: () -> Unit = {
-            }
-    ) {
-        when (type) {
-            RequestDisplay.NULL -> {
-            }
-            RequestDisplay.TOAST -> {
-//                viewChange.showToast.value = emptyMsg
-//                viewChange.dismissDialog.call()
-            }
-            RequestDisplay.REPLACE -> {
-                this.listener = View.OnClickListener {
-                    reTry()
-                }
-//                viewChange.showEmpty.value = emptyMsg
-
-            }
-        }
-    }
-
-    /**
-     * 网络异常
-     */
-    private fun onNetWorkError(
-            reTry: () -> Unit = {
-            }
-    ) {
-        when (type) {
-            RequestDisplay.NULL -> {
-
-            }
-            RequestDisplay.TOAST -> {
-//                viewChange.showToast.value = errorMsg
-//                viewChange.dismissDialog.call()
-            }
-            RequestDisplay.REPLACE -> {
-                this.listener = View.OnClickListener {
-                    reTry()
-                }
-//                viewChange.showNetworkError.value = errorMsg
-            }
-        }
-    }
-
-    /**
-     * 返回code错误
-     */
-    private fun onReturnCodeError(
-            returnCode: String,
-            message: String?,
-            reTry: () -> Unit = {
-            }
-    ) {
-        when (type) {
-            RequestDisplay.NULL -> {
-            }
-            RequestDisplay.TOAST -> {
-//                viewChange.showToast.value = message
-//                viewChange.dismissDialog.call()
-            }
-            RequestDisplay.REPLACE -> {
-                this.listener = View.OnClickListener {
-                    reTry()
-                }
-//                viewChange.showNetworkError.value = message
             }
         }
     }

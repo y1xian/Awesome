@@ -9,7 +9,6 @@ import com.yyxnb.arch.annotations.BindRes
 import com.yyxnb.arch.base.BaseActivity
 import com.yyxnb.arch.base.IFragment
 import com.yyxnb.arch.common.ArchConfig
-import com.yyxnb.common.AppConfig
 import java.lang.ref.WeakReference
 
 /**
@@ -49,7 +48,7 @@ open class ContainerActivity : BaseActivity() {
             }
 
             val fragmentName = intent.getStringExtra(ArchConfig.FRAGMENT)
-            require(!fragmentName.isEmpty()) { "can not find page fragmentName" }
+            require(fragmentName.isNotEmpty()) { "can not find page fragmentName" }
             val fragmentClass = Class.forName(fragmentName)
             val fragment = fragmentClass.newInstance() as Fragment
             if (intent.getBundleExtra(ArchConfig.BUNDLE) != null) {

@@ -16,7 +16,10 @@ import com.yyxnb.awesome.adapter.NetWorkListAdapter
 import com.yyxnb.awesome.bean.StateData
 import com.yyxnb.awesome.bean.TikTokBean
 import com.yyxnb.awesome.vm.NetWorkViewModel
+import com.yyxnb.http.Status
 import com.yyxnb.ktx.log
+import com.yyxnb.view.popup.Popup
+import com.yyxnb.view.popup.code.BasePopup
 import kotlinx.android.synthetic.main.fragment_net_work.*
 
 /**
@@ -30,6 +33,8 @@ class NetWorkFragment : BaseFragment() {
 
     private val mAdapter by lazy { NetWorkListAdapter() }
     private val page = 1
+    private val popup by lazy { Popup.Builder(context).hasShadowBg(false).asLoading("loading") }
+
     override fun initView(savedInstanceState: Bundle?) {
 
         mRecyclerView.layoutManager = LinearLayoutManager(context)
@@ -68,6 +73,19 @@ class NetWorkFragment : BaseFragment() {
         super.initViewData()
         log(" initViewData ")
 
+        mViewModel.status.observe(this, Observer { t ->
+            when (t) {
+                Status.LOADING -> {
+                    popup.show()
+                }
+                Status.COMPLETE -> {
+                    popup.dismiss()
+                }
+                else -> {
+                }
+            }
+        })
+
         mViewModel.videoList("123")
 
         mViewModel.result.observe(this, Observer { t: StateData<TikTokBean>? ->
@@ -76,7 +94,7 @@ class NetWorkFragment : BaseFragment() {
             mRefreshLayout!!.finishRefresh()
             if (t != null && t.list != null) {
                 log(" SUCCESS   " + t.list!!.size)
-                mAdapter!!.setDataItems(t.list)
+                mAdapter.setDataItems(t.list)
             }
         })
     }
