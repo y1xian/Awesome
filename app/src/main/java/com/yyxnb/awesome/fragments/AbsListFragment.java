@@ -5,9 +5,6 @@ import android.arch.paging.PagedList;
 import android.arch.paging.PagedListAdapter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
@@ -27,7 +24,6 @@ public abstract class AbsListFragment<T, M extends BasePagedViewModel<T>> extend
     protected LayoutRefreshViewBinding binding;
     protected RecyclerView mRecyclerView;
     protected SmartRefreshLayout mRefreshLayout;
-//    protected EmptyView mEmptyView;
     protected PagedListAdapter<T, RecyclerView.ViewHolder> adapter;
     protected M mViewModel;
     protected ItemDecoration decoration;
@@ -95,11 +91,6 @@ public abstract class AbsListFragment<T, M extends BasePagedViewModel<T>> extend
             mRefreshLayout.finishRefresh();
         }
 
-//        if (hasData) {
-//            mEmptyView.setVisibility(View.GONE);
-//        } else {
-//            mEmptyView.setVisibility(View.VISIBLE);
-//        }
     }
 
     /**
