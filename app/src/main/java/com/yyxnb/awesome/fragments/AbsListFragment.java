@@ -51,11 +51,8 @@ public abstract class AbsListFragment<T, M extends BasePagedViewModel<T>> extend
         mRefreshLayout.setOnLoadMoreListener(this);
 
         adapter = getAdapter();
-//        mRecyclerView.setAdapter(adapter);
-//        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-//        mRecyclerView.setItemAnimator(null);
 
-        //默认给列表中的Item 一个 10dp的ItemDecoration
+        //默认给列表中的Item 一个 1dp的ItemDecoration
         decoration = new ItemDecoration(getContext());
         mRecyclerView.addItemDecoration(decoration);
 

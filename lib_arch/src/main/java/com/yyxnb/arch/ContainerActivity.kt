@@ -5,6 +5,7 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.WindowManager
+import android.widget.FrameLayout
 import com.yyxnb.arch.annotations.BindRes
 import com.yyxnb.arch.base.BaseActivity
 import com.yyxnb.arch.base.IFragment
@@ -23,8 +24,11 @@ open class ContainerActivity : BaseActivity() {
 
     private lateinit var mFragment: WeakReference<Fragment>
 
-    override fun initLayoutResId(): Int {
-        return R.layout.base_nav_content
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val mFrameLayout = FrameLayout(this)
+        mFrameLayout.id = android.R.id.content
+        setContentView(mFrameLayout)
     }
 
     open fun initBaseFragment(): Fragment? {
@@ -43,7 +47,7 @@ open class ContainerActivity : BaseActivity() {
                 if (intent.getBundleExtra(ArchConfig.BUNDLE) != null) {
                     mFragment.get()?.arguments = intent.getBundleExtra(ArchConfig.BUNDLE)
                 }
-                setRootFragment(mFragment.get() as IFragment, R.id.fragmentContent)
+                setRootFragment(mFragment.get() as IFragment, android.R.id.content)
                 return
             }
 
@@ -54,7 +58,7 @@ open class ContainerActivity : BaseActivity() {
             if (intent.getBundleExtra(ArchConfig.BUNDLE) != null) {
                 fragment.arguments = intent.getBundleExtra(ArchConfig.BUNDLE)
             }
-            setRootFragment(fragment as IFragment, R.id.fragmentContent)
+            setRootFragment(fragment as IFragment, android.R.id.content)
         } catch (e: Exception) {
             e.printStackTrace()
         }
