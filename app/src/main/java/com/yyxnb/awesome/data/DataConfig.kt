@@ -2,7 +2,6 @@ package com.yyxnb.awesome.data
 
 import com.yyxnb.awesome.bean.MainBean
 import com.yyxnb.common.AppConfig
-import com.yyxnb.common.log.LogUtils.list
 import com.yyxnb.http.utils.GsonUtils.jsonToList
 import com.yyxnb.utils.FileUtils
 import java.util.*
@@ -21,7 +20,6 @@ object DataConfig {
                 val content = FileUtils.parseFile(AppConfig.getInstance().context, "main_data.json")
                 field = jsonToList(content, MainBean::class.java)
             }
-            list(field!!)
             return field
         }
         private set

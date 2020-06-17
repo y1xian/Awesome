@@ -26,14 +26,14 @@ class TestBaseFragment : BaseFragment() {
     }
 
     override fun initViewData() {
-        log("initViewData : " + hashCode())
+        log("initViewData testbase: " + hashCode())
     }
 
     override fun onVisible() {
-        log("onVisible : " + hashCode())
+        log("onVisible testbase: " + hashCode())
     }
 
     override fun onInVisible() {
-        log("onInVisible : " + hashCode())
+        log("onInVisible testbase: " + hashCode())
     }
 }

@@ -34,25 +34,30 @@ class TestFragment : Fragment(), IFragment {
     }
 
     override fun initObservable() {
-        viewModel.result.postValue("333333")
+//        viewModel.result.postValue("333333")
         viewModel.result.observe(this, Observer { s: String? -> LogUtils.e("test : $s") })
     }
 
     override fun initViewData() {
-        log("initViewData : " + hashCode())
+        log("initViewData test: " + hashCode())
     }
 
     override fun onVisible() {
-        log("onVisible : " + hashCode())
+        log("onVisible test: " + hashCode())
     }
 
     override fun onInVisible() {
-        log("onInVisible : " + hashCode())
+        log("onInVisible test: " + hashCode())
     }
 
     // vp下 要自实现setUserVisibleHint
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
         getBaseDelegate().setUserVisibleHint(isVisibleToUser)
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        getBaseDelegate().onHiddenChanged(hidden)
     }
 }

@@ -34,24 +34,44 @@ AnnotationRetention.RUNTIME 注解被编译到二进制文件，它会被加载�
 @MustBeDocumented
 //@Repeatable 该注解允许复数应用到同一目标（通过提供不同注解参数区分）
 annotation class BindRes(
-        // 布局id
+        /*
+         布局id
+         */
         val layoutRes: Int = 0,
-        // 作用于Fragment#ViewPager 判定为子页面
+        /*
+         作用于Fragment判定为子页面，不处理状态栏
+         */
         val subPage: Boolean = false,
-        // 给系统窗口留出空间（状态栏高度，包括水滴屏、刘海屏等的高度）
+        /*
+         给系统窗口留出空间（状态栏高度，包括水滴屏、刘海屏等的高度）
+         */
         val fitsSystemWindows: Boolean = false,
-        // 状态栏透明
+        /*
+         状态栏透明
+         */
         val statusBarTranslucent: Boolean = true,
-        // 状态栏文字 浅色、深色
+        /*
+         状态栏文字 浅色、深色
+         */
         @BarStyle val statusBarStyle: Int = BarStyle.None,
-        // 状态栏颜色
+        /*
+         状态栏颜色
+         */
         val statusBarColor: Int = 0,
-        // 侧滑 Fragment
+        /*
+         侧滑 Fragment
+         */
         @SwipeStyle val swipeBack: Int = SwipeStyle.Edge,
-        // 页面是否需要登录
+        /*
+         页面是否需要登录
+         */
         val needLogin: Boolean = false,
-        // 是否已继承第三方父类
+        /*
+         是否已继承第三方父类
+         */
         val isExtends: Boolean = false,
-        // Activity是否作为容器
+        /*
+         Activity是否作为容器
+         */
         val isContainer: Boolean = false
 )

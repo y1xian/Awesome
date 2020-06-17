@@ -11,6 +11,7 @@ import com.yyxnb.arch.base.BaseFragment
 import com.yyxnb.awesome.R
 import com.yyxnb.awesome.widget.BaseFragmentPagerAdapter
 import com.yyxnb.common.DpUtils.dp2px
+import kotlinx.android.synthetic.main.fragment_vp_main.*
 import net.lucode.hackware.magicindicator.MagicIndicator
 import net.lucode.hackware.magicindicator.ViewPagerHelper
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
@@ -22,25 +23,20 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.ColorT
 import java.util.*
 
 /**
- * A simple [Fragment] subclass.
- * create an instance of this fragment.
+ * viewPager 切换.
  */
-@BindRes(layoutRes = R.layout.fragment_vp_main)
+@BindRes(layoutRes = R.layout.fragment_vp_main, subPage = true)
 class VpMainFragment : BaseFragment() {
 
-    private var mIndicator: MagicIndicator? = null
-    private var mViewPager: ViewPager? = null
     private val titles = arrayOf("1111", "2222", "3333")
     private var fragments: MutableList<Fragment>? = null
 
     override fun initView(savedInstanceState: Bundle?) {
-        mIndicator = findViewById(R.id.mIndicator)
-        mViewPager = findViewById<ViewPager>(R.id.page)
         if (fragments == null) {
             fragments = arrayListOf()
             fragments?.add(TestFragment())
             fragments?.add(TestBaseFragment())
-            fragments?.add(NetWorkFragment())
+            fragments?.add(BottomFragment())
         }
         val commonNavigator = CommonNavigator(context)
         //ture 即标题平分屏幕宽度的模式
@@ -55,7 +51,7 @@ class VpMainFragment : BaseFragment() {
                 colorTransitionPagerTitleView.normalColor = Color.GRAY
                 colorTransitionPagerTitleView.selectedColor = Color.BLACK
                 colorTransitionPagerTitleView.text = titles[index]
-                colorTransitionPagerTitleView.setOnClickListener { view: View? -> mViewPager!!.currentItem = index }
+                colorTransitionPagerTitleView.setOnClickListener { view: View? -> mViewPager.currentItem = index }
                 return colorTransitionPagerTitleView
             }
 
@@ -74,9 +70,9 @@ class VpMainFragment : BaseFragment() {
                 return indicator
             }
         }
-        mIndicator!!.navigator = commonNavigator
-        mViewPager!!.offscreenPageLimit = titles.size - 1
-        mViewPager!!.adapter = BaseFragmentPagerAdapter(childFragmentManager, fragments, Arrays.asList(*titles))
+        mIndicator.navigator = commonNavigator
+        mViewPager.offscreenPageLimit = titles.size - 1
+        mViewPager.adapter = BaseFragmentPagerAdapter(childFragmentManager, fragments, Arrays.asList(*titles))
         //与ViewPagger联动
         ViewPagerHelper.bind(mIndicator, mViewPager)
     }

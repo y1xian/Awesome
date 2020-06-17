@@ -45,7 +45,6 @@ class FragmentDelegate(private var iFragment: IFragment?) : CoroutineScope by Ma
     private var statusBarDarkTheme = ArchConfig.statusBarStyle
     private var swipeBack = SwipeStyle.Edge
     private var subPage = false
-    private var group = -1
     private var needLogin = false
 
     init {
@@ -83,10 +82,8 @@ class FragmentDelegate(private var iFragment: IFragment?) : CoroutineScope by Ma
     }
 
     fun onActivityCreated(savedInstanceState: Bundle?) {
-        mLazyDelegate.onActivityCreated(savedInstanceState, subPage)
-        if (!subPage) {
-            setNeedsStatusBarAppearanceUpdate()
-        }
+        mLazyDelegate.onActivityCreated(savedInstanceState)
+        setNeedsStatusBarAppearanceUpdate()
     }
 
     fun setUserVisibleHint(isVisibleToUser: Boolean) {
@@ -155,6 +152,7 @@ class FragmentDelegate(private var iFragment: IFragment?) : CoroutineScope by Ma
      * 更新状态栏样式
      */
     fun setNeedsStatusBarAppearanceUpdate() {
+        // 子页面不做处理
         if (subPage) {
             return
         }
@@ -218,6 +216,8 @@ class FragmentDelegate(private var iFragment: IFragment?) : CoroutineScope by Ma
         intent.putExtra(ArchConfig.BUNDLE, bundle)
         mActivity!!.startActivityForResult(intent, requestCode)
     }
+
+    fun getLazyDelegate(): FragmentLazyDelegate = mLazyDelegate
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

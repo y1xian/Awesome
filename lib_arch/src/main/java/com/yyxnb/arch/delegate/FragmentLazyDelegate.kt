@@ -28,15 +28,8 @@ class FragmentLazyDelegate(mFragment: Fragment?) {
     /**
      * 可见状态
      */
-    /**
-     * 可见状态
-     */
     private var isSupportVisible = false
 
-    /**
-     * 可见状态
-     */
-    private var mIsSubPage = false
     private var iFragment: IFragment? = null
 
     init {
@@ -68,8 +61,7 @@ class FragmentLazyDelegate(mFragment: Fragment?) {
         mIsFirstVisible = true
     }
 
-    fun onActivityCreated(savedInstanceState: Bundle?, subPage: Boolean) {
-        mIsSubPage = subPage
+    fun onActivityCreated(savedInstanceState: Bundle?) {
         isViewCreated = true
         iFragment!!.initView(savedInstanceState)
         // !isHidden() 默认为 true  在调用 hide show 的时候可以使用
@@ -125,7 +117,7 @@ class FragmentLazyDelegate(mFragment: Fragment?) {
         //但当父 fragment 不可见所以 mCurrentVisibleState = false 直接 return 掉
         //        LogUtils.e(getClass().getSimpleName() + "  dispatchUserVisibleHint isParentInvisible() " + isParentInvisible());
         // 这里限制则可以限制多层嵌套的时候子 Fragment 的分发
-        if (visible && isParentInvisible && !mIsSubPage) {
+        if (visible && isParentInvisible) {
             return
         }
 
@@ -159,7 +151,10 @@ class FragmentLazyDelegate(mFragment: Fragment?) {
     private val isParentInvisible: Boolean
         get() {
             val fragment = mFragment!!.parentFragment
-            return fragment != null && !isSupportVisible
+            if (fragment is IFragment){
+                return !(fragment as IFragment).getBaseDelegate().getLazyDelegate().isSupportVisible
+            }
+            return fragment != null && !fragment.isVisible
         }
 
     /**
@@ -174,9 +169,7 @@ class FragmentLazyDelegate(mFragment: Fragment?) {
      * 但是由于父 Fragment 还进入可见状态所以自身也是不可见的， 这个方法可以存在是因为庆幸的是 父 fragment 的生命周期回调总是先于子 Fragment
      * 所以在父 fragment 设置完成当前不可见状态后，需要通知子 Fragment 我不可见，你也不可见，
      *
-     *
      * 因为 dispatchUserVisibleHint 中判断了 isParentInvisible 所以当 子 fragment 走到了 onActivityCreated 的时候直接 return 掉了
-     *
      *
      * 当真正的外部 Fragment 可见的时候，走 setVisibleHint (VP 中)或者 onActivityCreated (hide show) 的时候
      * 从对应的生命周期入口调用 dispatchChildVisibleState 通知子 Fragment 可见状态
@@ -186,10 +179,10 @@ class FragmentLazyDelegate(mFragment: Fragment?) {
     private fun dispatchChildVisibleState(visible: Boolean) {
         val childFragmentManager = mFragment!!.childFragmentManager
         val fragments = childFragmentManager.fragments
-        if (fragments.isEmpty()) {
+        if (fragments.isNotEmpty()) {
             for (child in fragments) {
-                if (child is BaseFragment && !child.isHidden() && child.getUserVisibleHint()) {
-                    dispatchUserVisibleHint(visible)
+                if (child is IFragment && !child.isHidden && child.userVisibleHint) {
+                    (child as IFragment).getBaseDelegate().getLazyDelegate().dispatchUserVisibleHint(visible)
                 }
             }
         }
