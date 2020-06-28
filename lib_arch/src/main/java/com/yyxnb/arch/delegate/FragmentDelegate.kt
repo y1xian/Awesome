@@ -11,10 +11,8 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.view.*
-import com.yyxnb.arch.ContainerActivity
 import com.yyxnb.arch.annotations.BarStyle
 import com.yyxnb.arch.annotations.BindRes
-import com.yyxnb.arch.annotations.BindViewModel
 import com.yyxnb.arch.annotations.SwipeStyle
 import com.yyxnb.arch.base.IActivity
 import com.yyxnb.arch.base.IFragment
@@ -205,16 +203,6 @@ class FragmentDelegate(private var iFragment: IFragment?) : CoroutineScope by Ma
 
     fun finish() {
         mActivity?.onBackPressed()
-    }
-
-    fun <T : IFragment> startFragment(targetFragment: T, requestCode: Int) {
-        val bundle = initArguments()
-        val intent = Intent(mActivity, ContainerActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        intent.putExtra(ArchConfig.FRAGMENT, targetFragment.javaClass.canonicalName)
-        bundle.putInt(ArchConfig.REQUEST_CODE, requestCode)
-        intent.putExtra(ArchConfig.BUNDLE, bundle)
-        mActivity!!.startActivityForResult(intent, requestCode)
     }
 
     fun getLazyDelegate(): FragmentLazyDelegate = mLazyDelegate

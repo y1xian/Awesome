@@ -1,4 +1,4 @@
-package com.yyxnb.arch.base
+package com.yyxnb.awesome.base
 
 import android.arch.lifecycle.DefaultLifecycleObserver
 import android.arch.lifecycle.LifecycleOwner
@@ -14,7 +14,9 @@ import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.yyxnb.arch.delegate.FragmentDelegate
+import com.yyxnb.arch.base.IFragment
+import com.yyxnb.arch.base.Java8Observer
+import com.yyxnb.arch.common.ArchConfig
 import java.lang.ref.WeakReference
 import java.util.*
 
@@ -119,7 +121,17 @@ abstract class BaseFragment : Fragment(), IFragment {
     }
 
     fun <T : IFragment> startFragment(targetFragment: T, requestCode: Int) {
-        mFragmentDelegate.startFragment(targetFragment, requestCode)
+        try {
+            val bundle = initArguments()
+            val intent = Intent(mActivity!!.get(), ContainerActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            intent.putExtra(ArchConfig.FRAGMENT, targetFragment.javaClass.canonicalName)
+            bundle.putInt(ArchConfig.REQUEST_CODE, requestCode)
+            intent.putExtra(ArchConfig.BUNDLE, bundle)
+            mActivity!!.get()!!.startActivityForResult(intent, requestCode)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
 }

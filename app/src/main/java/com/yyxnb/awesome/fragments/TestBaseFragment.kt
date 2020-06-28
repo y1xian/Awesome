@@ -4,8 +4,8 @@ import android.arch.lifecycle.Observer
 import android.os.Bundle
 import com.yyxnb.arch.annotations.BindRes
 import com.yyxnb.arch.annotations.BindViewModel
-import com.yyxnb.arch.base.BaseFragment
 import com.yyxnb.awesome.R
+import com.yyxnb.awesome.base.BaseFragment
 import com.yyxnb.awesome.vm.TestViewModel
 import com.yyxnb.common.log.LogUtils.e
 import com.yyxnb.ktx.log

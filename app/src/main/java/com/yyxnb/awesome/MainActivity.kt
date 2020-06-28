@@ -1,7 +1,7 @@
 package com.yyxnb.awesome
 
-import com.yyxnb.arch.ContainerActivity
-import com.yyxnb.arch.base.BaseFragment
+import com.yyxnb.awesome.base.BaseFragment
+import com.yyxnb.awesome.base.ContainerActivity
 import com.yyxnb.awesome.fragments.MainFragment
 
 class MainActivity : ContainerActivity() {

@@ -1,4 +1,4 @@
-package com.yyxnb.arch
+package com.yyxnb.awesome.base
 
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment
 import android.view.WindowManager
 import android.widget.FrameLayout
 import com.yyxnb.arch.annotations.BindRes
-import com.yyxnb.arch.base.BaseActivity
 import com.yyxnb.arch.base.IFragment
 import com.yyxnb.arch.common.ArchConfig
 import java.lang.ref.WeakReference

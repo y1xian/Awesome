@@ -1,13 +1,21 @@
-package com.yyxnb.arch.base
+package com.yyxnb.awesome.base
 
 import android.content.Context
+import android.content.Intent
 import android.content.res.Resources
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
+import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.MotionEvent
 import com.github.anzewei.parallaxbacklayout.ParallaxBack
-import com.yyxnb.arch.ContainerActivity
+import com.github.anzewei.parallaxbacklayout.ParallaxHelper
+import com.github.anzewei.parallaxbacklayout.widget.ParallaxBackLayout
+import com.yyxnb.arch.annotations.SwipeStyle
+import com.yyxnb.arch.base.IActivity
+import com.yyxnb.arch.base.IFragment
+import com.yyxnb.arch.base.Java8Observer
+import com.yyxnb.arch.common.ArchConfig
 import com.yyxnb.common.KeyboardUtils
 import me.jessyan.autosize.AutoSizeCompat
 import java.lang.ref.WeakReference
@@ -39,7 +47,22 @@ abstract class BaseActivity : AppCompatActivity(), IActivity {
     }
 
     override fun setSwipeBack(mSwipeBack: Int) {
-        mActivityDelegate.setSwipeBack(mSwipeBack)
+        val layout = ParallaxHelper.getParallaxBackLayout(this, true)
+        when (mSwipeBack) {
+            SwipeStyle.Full -> {
+                ParallaxHelper.enableParallaxBack(this)
+                //全屏滑动
+                layout.setEdgeMode(ParallaxBackLayout.EDGE_MODE_FULL)
+            }
+            SwipeStyle.Edge -> {
+                ParallaxHelper.enableParallaxBack(this)
+                //边缘滑动
+                layout.setEdgeMode(ParallaxBackLayout.EDGE_MODE_DEFAULT)
+            }
+            SwipeStyle.None -> ParallaxHelper.disableParallaxBack(this)
+            else -> {
+            }
+        }
     }
 
     override fun onDestroy() {
@@ -86,11 +109,24 @@ abstract class BaseActivity : AppCompatActivity(), IActivity {
     }
 
     fun <T : IFragment> startFragment(targetFragment: T, requestCode: Int) {
-        mActivityDelegate.startFragment(targetFragment, requestCode)
+        try {
+            val intent = Intent(this, ContainerActivity::class.java)
+            val bundle = targetFragment.initArguments()
+            bundle!!.putInt(ArchConfig.REQUEST_CODE, requestCode)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            intent.putExtra(ArchConfig.FRAGMENT, targetFragment.javaClass.canonicalName)
+            intent.putExtra(ArchConfig.BUNDLE, bundle)
+            startActivityForResult(intent, requestCode)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     fun setRootFragment(fragment: IFragment, containerId: Int) {
-        mActivityDelegate.setRootFragment(fragment, containerId)
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(containerId, (fragment as Fragment), fragment.sceneId())
+        transaction.addToBackStack(fragment.sceneId())
+        transaction.commitAllowingStateLoss()
     }
 
 }

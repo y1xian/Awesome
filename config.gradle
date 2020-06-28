@@ -48,7 +48,7 @@ ext {
             robolectric         : '3.3.2',
             junit               : '4.12',
 
-            widget              : '1.0.5'
+            widget              : '1.0.7.1'
 
     ]
 

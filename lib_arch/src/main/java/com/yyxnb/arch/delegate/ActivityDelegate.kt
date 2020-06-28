@@ -9,14 +9,9 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.Window
 import android.widget.EditText
-import com.github.anzewei.parallaxbacklayout.ParallaxHelper
-import com.github.anzewei.parallaxbacklayout.widget.ParallaxBackLayout
-import com.yyxnb.arch.ContainerActivity
 import com.yyxnb.arch.annotations.BarStyle
 import com.yyxnb.arch.annotations.BindRes
-import com.yyxnb.arch.annotations.SwipeStyle
 import com.yyxnb.arch.base.IActivity
-import com.yyxnb.arch.base.IFragment
 import com.yyxnb.arch.common.ArchConfig
 import com.yyxnb.arch.common.Bus
 import com.yyxnb.arch.common.MsgEvent
@@ -139,46 +134,6 @@ class ActivityDelegate(private var iActivity: IActivity?) : CoroutineScope by Ma
                 }
             }
         })
-    }
-
-    fun setSwipeBack(mSwipeBack: Int) {
-        val layout = ParallaxHelper.getParallaxBackLayout(mActivity, true)
-        when (mSwipeBack) {
-            SwipeStyle.Full -> {
-                ParallaxHelper.enableParallaxBack(mActivity)
-                //全屏滑动
-                layout.setEdgeMode(ParallaxBackLayout.EDGE_MODE_FULL)
-            }
-            SwipeStyle.Edge -> {
-                ParallaxHelper.enableParallaxBack(mActivity)
-                //边缘滑动
-                layout.setEdgeMode(ParallaxBackLayout.EDGE_MODE_DEFAULT)
-            }
-            SwipeStyle.None -> ParallaxHelper.disableParallaxBack(mActivity)
-            else -> {
-            }
-        }
-    }
-
-    fun <T : IFragment> startFragment(targetFragment: T) {
-        startFragment(targetFragment, 0)
-    }
-
-    fun <T : IFragment> startFragment(targetFragment: T, requestCode: Int) {
-        val intent = Intent(mActivity, ContainerActivity::class.java)
-        val bundle: Bundle? = targetFragment.initArguments()
-        bundle?.putInt(ArchConfig.REQUEST_CODE, requestCode)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        intent.putExtra(ArchConfig.FRAGMENT, targetFragment.javaClass.canonicalName)
-        intent.putExtra(ArchConfig.BUNDLE, bundle)
-        mActivity!!.startActivityForResult(intent, requestCode)
-    }
-
-    fun <T : IFragment> setRootFragment(fragment: T, containerId: Int) {
-        val transaction = mActivity!!.supportFragmentManager.beginTransaction()
-        transaction.replace(containerId, (fragment as Fragment), fragment.sceneId())
-        transaction.addToBackStack(fragment.sceneId())
-        transaction.commitAllowingStateLoss()
     }
 
     override fun equals(other: Any?): Boolean {

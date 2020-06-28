@@ -5,7 +5,7 @@ import android.os.Bundle
 import com.yyxnb.arch.annotations.BarStyle
 import com.yyxnb.arch.annotations.BindRes
 import com.yyxnb.arch.annotations.BindViewModel
-import com.yyxnb.arch.base.BaseActivity
+import com.yyxnb.awesome.base.BaseActivity
 import com.yyxnb.awesome.vm.TestViewModel
 import com.yyxnb.common.log.LogUtils.e
 

@@ -3,7 +3,6 @@ package com.yyxnb.arch.delegate
 import android.content.res.Configuration
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import com.yyxnb.arch.base.BaseFragment
 import com.yyxnb.arch.base.IFragment
 
 /**

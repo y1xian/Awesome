@@ -4,15 +4,13 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v4.view.ViewPager
 import android.view.View
 import com.yyxnb.arch.annotations.BindRes
-import com.yyxnb.arch.base.BaseFragment
 import com.yyxnb.awesome.R
+import com.yyxnb.awesome.base.BaseFragment
 import com.yyxnb.awesome.widget.BaseFragmentPagerAdapter
 import com.yyxnb.common.DpUtils.dp2px
 import kotlinx.android.synthetic.main.fragment_vp_main.*
-import net.lucode.hackware.magicindicator.MagicIndicator
 import net.lucode.hackware.magicindicator.ViewPagerHelper
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter

@@ -12,8 +12,8 @@ import com.scwang.smart.refresh.layout.constant.RefreshState;
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 import com.yyxnb.adapter.ItemDecoration;
-import com.yyxnb.arch.base.BaseFragment;
 import com.yyxnb.awesome.R;
+import com.yyxnb.awesome.base.BaseFragment;
 import com.yyxnb.awesome.databinding.LayoutRefreshViewBinding;
 import com.yyxnb.http.BasePagedViewModel;
 

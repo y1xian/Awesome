@@ -5,8 +5,8 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.view.View
 import com.yyxnb.arch.annotations.BindRes
-import com.yyxnb.arch.base.BaseFragment
 import com.yyxnb.awesome.R
+import com.yyxnb.awesome.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_bottom.*
 import java.util.*
 

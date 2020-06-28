@@ -10,16 +10,15 @@ import com.yyxnb.adapter.BaseViewHolder
 import com.yyxnb.adapter.MultiItemTypeAdapter
 import com.yyxnb.arch.annotations.BindRes
 import com.yyxnb.arch.annotations.BindViewModel
-import com.yyxnb.arch.base.BaseFragment
 import com.yyxnb.awesome.R
 import com.yyxnb.awesome.adapter.NetWorkListAdapter
+import com.yyxnb.awesome.base.BaseFragment
 import com.yyxnb.awesome.bean.StateData
 import com.yyxnb.awesome.bean.TikTokBean
 import com.yyxnb.awesome.vm.NetWorkViewModel
 import com.yyxnb.http.Status
 import com.yyxnb.ktx.log
 import com.yyxnb.view.popup.Popup
-import com.yyxnb.view.popup.code.BasePopup
 import kotlinx.android.synthetic.main.fragment_net_work.*
 
 /**
